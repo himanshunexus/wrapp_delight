@@ -106,10 +106,13 @@
   /* Product grid */
   .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
     margin-top: 24px;
   }
+  @media (max-width: 1200px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 768px)  { .product-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px)  { .product-grid { grid-template-columns: 1fr; } }
 
   /* Product Card (same as home) */
   .p-card {
@@ -268,7 +271,7 @@
 
 <!-- ══ Search Hero ══ -->
 <section class="search-hero">
-  <div class="container" style="max-width:1240px;margin:0 auto;padding:0 24px;">
+  <div class="container" style="width:100%;margin:0 auto;padding:0 12px;">
 
     <p class="search-kicker">Catalog Search</p>
     <h1 class="search-title">
@@ -317,17 +320,20 @@
 
 <!-- ══ Results ══ -->
 <section class="results-section">
-  <div class="container" style="max-width:1240px;margin:0 auto;padding:0 24px;">
+  <div class="container" style="width:100%;margin:0 auto;padding:0 12px;">
 
     {% if query %}
 
       {% if products %}
         <div class="product-grid">
           {% for product in products %}
-            <article class="p-card">
+            <article class="p-card group">
               <a href="{% url 'product_detail' product.id %}" class="p-card-img">
-                {% if product.cover_image %}
-                  <img src="{{ product.cover_image_url }}" alt="{{ product.name }}" loading="lazy">
+                {% if product.cover_image_url %}
+                  <img src="{{ product.cover_image_url }}" alt="{{ product.name }}" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0">
+                  {% if product.gallery_image_url and product.gallery_image_url != product.cover_image_url %}
+                    <img src="{{ product.gallery_image_url }}" alt="{{ product.name }}" loading="lazy" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  {% endif %}
                 {% else %}
                   <div class="p-card-img-placeholder">No Image</div>
                 {% endif %}

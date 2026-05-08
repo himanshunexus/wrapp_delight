@@ -1,0 +1,696 @@
+<!-- ═══════════════════════════════════════════
+     NAVBAR PARTIAL - CONSISTENT ACROSS ALL PAGES
+════════════════════════════════════════════ -->
+
+<style>
+  :root {
+    --site-header-height: 110px;
+  }
+
+  /* Ensure page content starts below fixed header; JS will update this value */
+  body {
+    padding-top: var(--site-header-height);
+  }
+
+  /* ─── Navbar ─── */
+  header.scrolled {
+    background: rgba(255, 255, 255, 0.97) !important;
+    box-shadow: 0 2px 20px rgba(128, 1, 31, 0.07);
+  }
+
+  .wd-logo {
+    font-family: 'Noto Serif', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #160507;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: opacity 0.2s ease;
+  }
+
+  .wd-logo:hover {
+    opacity: 0.75;
+  }
+
+  .wd-logo-gift {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    background: rgba(175, 16, 26, 0.08);
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+
+  .wd-logo-gift .material-symbols-outlined {
+    font-size: 28px;
+    color: #af101a;
+    font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+  }
+
+  .wd-nav-link {
+    position: relative;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #3d2020;
+    text-decoration: none;
+    padding: 6px 0;
+    transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .wd-nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1.5px;
+    background: #af101a;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.22s ease;
+  }
+
+  .wd-nav-link:hover {
+    color: #af101a;
+  }
+
+  .wd-nav-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  .wd-nav-link.active {
+    color: #af101a;
+  }
+
+  .wd-nav-link.active::after {
+    transform: scaleX(1);
+  }
+
+  .wd-nav-dropdown {
+    position: relative;
+  }
+
+  .wd-nav-dropdown::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 16px;
+  }
+
+  .wd-nav-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 16px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-6px);
+    min-width: 240px;
+    padding: 8px;
+    background: #fff;
+    border: 1px solid #eddada;
+    border-radius: 18px;
+    box-shadow: 0 24px 56px rgba(128, 1, 31, 0.11), 0 4px 12px rgba(0, 0, 0, 0.05);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    z-index: 60;
+  }
+
+  .wd-nav-dropdown-menu::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 6px;
+    background: #fff;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    filter: drop-shadow(0 -1px 0 #eddada);
+  }
+
+  .wd-nav-dropdown:hover .wd-nav-dropdown-menu,
+  .wd-nav-dropdown:focus-within .wd-nav-dropdown-menu,
+  .wd-nav-dropdown.is-open .wd-nav-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .wd-nav-dropdown-label {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #b09090;
+    padding: 6px 12px 4px;
+  }
+
+  .wd-nav-dropdown-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 12px;
+    color: #1a1c1c;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    transition: background 0.15s ease, color 0.15s ease;
+    text-decoration: none;
+  }
+
+  .wd-nav-dropdown-link:hover {
+    background: #fdf0f0;
+    color: #af101a;
+  }
+
+  .wd-nav-dropdown-link:hover .material-symbols-outlined {
+    color: #af101a;
+  }
+
+  .wd-nav-dropdown-link .material-symbols-outlined {
+    font-size: 17px;
+    color: #c49090;
+    transition: color 0.15s ease;
+  }
+
+  .wd-nav-dropdown-divider {
+    height: 1px;
+    background: #f0e4e4;
+    margin: 4px 8px;
+  }
+
+  /* Search pill */
+  .wd-search-pill {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid #e4beba;
+    border-radius: 999px;
+    background: #fdf7f7;
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .wd-search-pill:focus-within {
+    border-color: #af101a;
+    box-shadow: 0 0 0 3px rgba(175, 16, 26, 0.1);
+    background: #fff;
+  }
+
+  .wd-search-pill input {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 13px;
+    font-family: 'Manrope', sans-serif;
+    color: #1a1c1c;
+    padding: 8px 10px 8px 14px;
+    width: 160px;
+  }
+
+  .wd-search-pill input::placeholder {
+    color: #b09090;
+  }
+
+  .wd-search-pill button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: #b09090;
+    padding: 7px 10px;
+    cursor: pointer;
+    transition: color 0.15s ease;
+  }
+
+  .wd-search-pill button:hover {
+    color: #af101a;
+  }
+
+  /* Cart icon — secondary, unobtrusive */
+  .wd-cart-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    color: #5b403d;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+
+  .wd-cart-btn:hover {
+    color: #af101a;
+  }
+
+  .wd-cart-count {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: #af101a;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    border: 2px solid #fff;
+  }
+
+  /* Favorites button */
+  .wd-favorites-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    color: #5b403d;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .wd-favorites-btn:hover {
+    color: #af101a;
+  }
+
+  .wd-favorites-btn.has-favorites {
+    color: #af101a;
+  }
+
+  /* Primary CTA in nav — this is the hero action, keep it prominent */
+  .wd-nav-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 11px 22px;
+    background: #af101a;
+    color: #fff;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    box-shadow: 0 4px 14px rgba(175, 16, 26, 0.28);
+  }
+
+  .wd-nav-cta:hover {
+    background: #930010;
+    box-shadow: 0 6px 20px rgba(175, 16, 26, 0.38);
+    transform: translateY(-1px);
+  }
+
+  .wd-nav-cta:active {
+    transform: scale(0.97);
+  }
+
+  /* Mobile menu toggle */
+  .wd-mobile-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    color: #5b403d;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    background: none;
+    border: none;
+  }
+
+  @media (max-width: 767px) {
+    .wd-mobile-toggle {
+      display: flex;
+    }
+  }
+
+  .wd-mobile-toggle:hover {
+    color: #af101a;
+  }
+
+  /* Mobile drawer */
+  #mobileMenu {
+    background: #fff;
+    border-top: 1px solid #f0e4e4;
+  }
+
+  .wd-mobile-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1c1c;
+    border-bottom: 1px solid #f7f0f0;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .wd-mobile-link:hover {
+    color: #af101a;
+  }
+
+  .wd-mobile-link .material-symbols-outlined {
+    font-size: 18px;
+    color: #c49090;
+    flex-shrink: 0;
+  }
+
+  .wd-mobile-link:hover .material-symbols-outlined {
+    color: #af101a;
+  }
+
+  @keyframes ribbon-swing {
+    0% {
+      transform: rotate(-2deg);
+    }
+
+    100% {
+      transform: rotate(3deg);
+    }
+  }
+
+  .wd-ribbon {
+    display: none; /* Hidden on mobile */
+    position: absolute;
+    top: -2px;
+    left: 28px;
+    width: 50px;
+    pointer-events: none;
+    z-index: 60;
+    transform-origin: top center;
+    animation: ribbon-swing 4.5s ease-in-out infinite alternate;
+    filter: drop-shadow(0 6px 10px rgba(175, 16, 26, 0.22));
+  }
+  @media (min-width: 768px) {
+    .wd-ribbon { 
+      display: block;
+      left: 60px; 
+      width: 85px;
+    }
+  }
+</style>
+
+<!-- Header -->
+<header id="siteHeader"
+  class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-[#f0e4e4] transition-shadow duration-300">
+
+  <!-- Decorative Ribbon -->
+  <img src="https://res.cloudinary.com/dwti6e55r/image/upload/v1778271478/ribbon_cglsy9.svg" alt="" class="wd-ribbon"
+    aria-hidden="true">
+
+  <nav class="flex flex-col w-full max-w-7xl mx-auto px-6 md:px-12 py-3 gap-2 md:gap-4" aria-label="Main navigation">
+
+    <!-- Top Row: Logo Centered, Actions Right -->
+    <div class="flex items-center justify-between w-full h-[60px]">
+
+      <!-- Left: Mobile Menu Toggle -->
+      <div class="flex-1 flex justify-start items-center">
+        <!-- Mobile toggle -->
+        <button type="button" id="mobileMenuToggle" class="wd-mobile-toggle md:hidden" aria-expanded="false"
+          aria-controls="mobileMenu" aria-label="Toggle navigation">
+          <span class="material-symbols-outlined" style="font-size:22px;" id="mobileMenuIcon">menu</span>
+        </button>
+      </div>
+
+      <!-- Center: Logo -->
+      <div class="flex-shrink-0 flex justify-center items-center">
+        <a href="{% url 'home' %}" class="wd-logo" aria-label="WrappDelights home">
+          <span class="wd-logo-gift" aria-hidden="true">
+            <span class="material-symbols-outlined">redeem</span>
+          </span>
+          WrappDelights
+        </a>
+      </div>
+
+      <!-- Right: Search + Cart + Favorites -->
+      <div class="flex-1 flex justify-end items-center gap-2">
+
+
+        <a href="{% url 'favorites' %}" id="favoritesBtn" class="wd-favorites-btn" aria-label="View favorites">
+          <span class="material-symbols-outlined" style="font-size:21px;">favorite</span>
+          <span class="wd-cart-count {% if not favorites_count %}hidden{% endif %}" id="favoritesCount">{{ favorites_count|default:0 }}</span>
+        </a>
+
+        <!-- Cart -->
+        {% with kit_count=request.session.kit|length %}
+        <a href="{% url 'custom_hamper_review' %}" class="wd-cart-btn" aria-label="View hamper kit">
+          <span class="material-symbols-outlined" style="font-size:21px;">shopping_bag</span>
+          {% if kit_count %}
+          <span class="wd-cart-count">{{ kit_count }}</span>
+          {% endif %}
+        </a>
+        {% endwith %}
+      </div>
+
+    </div>
+
+    <!-- Bottom Row: Centered Nav Links -->
+    <div class="hidden md:flex justify-center items-center w-full pb-1">
+      <ul class="flex items-center gap-8 list-none m-0 p-0" aria-label="Primary navigation">
+
+        <!-- Wedding -->
+        <li class="wd-nav-dropdown">
+          <a href="{% url 'products' %}?category=wedding"
+            class="wd-nav-link wd-nav-dropdown-trigger {% block nav_wedding %}{% endblock %}" aria-haspopup="true"
+            aria-expanded="false">
+            Wedding
+            <span class="material-symbols-outlined" style="font-size:14px;opacity:.6;">expand_more</span>
+          </a>
+          <div class="wd-nav-dropdown-menu" role="menu">
+            <p class="wd-nav-dropdown-label">Wedding Gifts</p>
+            <a href="{% url 'products' %}?category=wedding-return-gifts" class="wd-nav-dropdown-link" role="menuitem">
+              <span class="material-symbols-outlined"
+                style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">favorite</span>
+              Wedding Return Gifts
+            </a>
+            <a href="{% url 'products' %}?category=wedding-accessories" class="wd-nav-dropdown-link" role="menuitem">
+              <span class="material-symbols-outlined"
+                style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">diamond</span>
+              Wedding Accessories
+            </a>
+            <a href="{% url 'products' %}?category=wedding-hampers" class="wd-nav-dropdown-link" role="menuitem">
+              <span class="material-symbols-outlined"
+                style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">redeem</span>
+              Wedding Hampers
+            </a>
+          </div>
+        </li>
+
+        <!-- Employees -->
+        <li class="wd-nav-dropdown">
+          <a href="{% url 'products' %}?category=employee"
+            class="wd-nav-link wd-nav-dropdown-trigger {% block nav_shop %}{% endblock %}" aria-haspopup="true"
+            aria-expanded="false">
+            Employees
+            <span class="material-symbols-outlined" style="font-size:14px;opacity:.6;">expand_more</span>
+          </a>
+          <div class="wd-nav-dropdown-menu" role="menu">
+            <p class="wd-nav-dropdown-label">Employee Gifts</p>
+            <a href="{% url 'products' %}?category=employee-welcome-kit" class="wd-nav-dropdown-link" role="menuitem">
+              <span class="material-symbols-outlined"
+                style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">badge</span>
+              Employee Welcome Kit
+            </a>
+            <a href="{% url 'products' %}?category=office-welcome-kit" class="wd-nav-dropdown-link" role="menuitem">
+              <span class="material-symbols-outlined"
+                style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">work</span>
+              Office Welcome Kit
+            </a>
+          </div>
+        </li>
+
+        <!-- Corporate -->
+        <li class="wd-nav-dropdown">
+          <a href="{% url 'products' %}?category=corporate"
+            class="wd-nav-link wd-nav-dropdown-trigger {% block nav_corporate %}{% endblock %}" aria-haspopup="true"
+            aria-expanded="false">
+            Corporate
+            <span class="material-symbols-outlined" style="font-size:14px;opacity:.6;">expand_more</span>
+          </a>
+          <div class="wd-nav-dropdown-menu" role="menu">
+            <p class="wd-nav-dropdown-label">Corporate Occasions</p>
+            <a href="{% url 'products' %}?category=corporate-christmas-gifts" class="wd-nav-dropdown-link"
+              role="menuitem">
+              <span class="material-symbols-outlined"
+                style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">celebration</span>
+              Corporate Christmas Gifts
+            </a>
+            <a href="{% url 'products' %}?category=corporate-womens-day-gifts" class="wd-nav-dropdown-link"
+              role="menuitem">
+              <span class="material-symbols-outlined"
+                style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">female</span>
+              Women's Day Gifts
+            </a>
+            <a href="{% url 'products' %}?category=corporate-new-year-gifts" class="wd-nav-dropdown-link"
+              role="menuitem">
+              <span class="material-symbols-outlined"
+                style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">new_releases</span>
+              New Year Gifts
+            </a>
+            <div class="wd-nav-dropdown-divider"></div>
+            <a href="{% url 'products' %}?category=corporate-diwali-gifts" class="wd-nav-dropdown-link" role="menuitem">
+              <span class="material-symbols-outlined"
+                style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">light_mode</span>
+              Diwali Gifts
+            </a>
+          </div>
+        </li>
+
+        <!-- All Gifts -->
+        <li>
+          <a href="{% url 'products' %}" class="wd-nav-link {% block nav_all %}{% endblock %}">
+            All Gifts
+          </a>
+        </li>
+
+        <!-- Build Hamper CTA -->
+        <li>
+          <a href="{% url 'custom_hamper' %}" class="wd-nav-cta ml-2 {% block nav_hamper %}{% endblock %}">
+            <span class="material-symbols-outlined" style="font-size:14px;">auto_fix_high</span>
+            Build Hamper
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Mobile Drawer -->
+  <div id="mobileMenu" class="hidden md:hidden" aria-label="Mobile navigation">
+    <div class="px-5 pt-4 pb-2">
+    </div>
+    <nav class="flex flex-col px-5 pb-5">
+      <a href="{% url 'favorites' %}" class="wd-mobile-link">
+        <span class="material-symbols-outlined"
+          style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">favorite</span>
+        Favorites
+      </a>
+      <a href="{% url 'products' %}?category=wedding" class="wd-mobile-link">
+        <span class="material-symbols-outlined"
+          style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">favorite</span>
+        Wedding
+      </a>
+      <a href="{% url 'products' %}?category=employee" class="wd-mobile-link">
+        <span class="material-symbols-outlined"
+          style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">badge</span>
+        Employees
+      </a>
+      <a href="{% url 'products' %}?category=corporate" class="wd-mobile-link">
+        <span class="material-symbols-outlined"
+          style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">business_center</span>
+        Corporate
+      </a>
+      <a href="{% url 'products' %}" class="wd-mobile-link">
+        <span class="material-symbols-outlined"
+          style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">inventory_2</span>
+        All Gifts
+      </a>
+      <a href="{% url 'custom_hamper' %}" class="wd-mobile-link">
+        <span class="material-symbols-outlined"
+          style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">redeem</span>
+        Build Custom Hamper
+      </a>
+      <a href="tel:{{ phone_number_raw|default:'+919309810348' }}" class="wd-mobile-link" style="border-bottom:none;">
+        <span class="material-symbols-outlined"
+          style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">call</span>
+        {{ phone_number|default:'+91 93098 10348' }}
+      </a>
+      <div class="mt-5">
+        <a href="{% url 'custom_hamper' %}" class="wd-nav-cta w-full justify-center"
+          style="border-radius:12px;padding:12px 20px;">
+          <span class="material-symbols-outlined" style="font-size:15px;">auto_fix_high</span>
+          Build Your Hamper
+        </a>
+      </div>
+    </nav>
+  </div>
+
+</header>
+
+<script>
+  (function () {
+    var header = document.getElementById('siteHeader');
+    function firstVisibleDescendant(root) {
+      if (!root) return null;
+      var children = root.children;
+      for (var i = 0; i < children.length; i++) {
+        var el = children[i];
+        if (!(el instanceof HTMLElement)) continue;
+        var rect = el.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) return el;
+        var deep = firstVisibleDescendant(el);
+        if (deep) return deep;
+      }
+      return null;
+    }
+
+    function updateHeaderHeight() {
+      if (!header) return;
+      var h = header.offsetHeight || 110;
+      var next = header.nextElementSibling || document.body.firstElementChild;
+      var first = null;
+      if (next) {
+        // If the next sibling itself is visible and not just a wrapper, use it
+        var r = next.getBoundingClientRect();
+        if (r.width > 0 && r.height > 0 && getComputedStyle(next).display !== 'none') {
+          first = firstVisibleDescendant(next) || next;
+        }
+      }
+      if (!first) first = document.body.firstElementChild;
+
+      var gap = 0;
+      var firstPadding = 0, firstMargin = 0;
+      try {
+        var headerBottom = header.getBoundingClientRect().bottom;
+        var firstTop = first.getBoundingClientRect().top;
+        gap = Math.round((firstTop - headerBottom));
+        var cs = getComputedStyle(first);
+        firstPadding = parseFloat(cs.paddingTop) || 0;
+        firstMargin = parseFloat(cs.marginTop) || 0;
+      } catch (e) { gap = 0; }
+
+      // If the first element already provides top spacing via padding or margin
+      // that's approximately the header height, don't add extra body padding.
+      var applied = (firstPadding >= (h - 6) || firstMargin >= (h - 6) || gap >= (h - 6)) ? 0 : h;
+      document.documentElement.style.setProperty('--site-header-height', applied + 'px');
+    }
+
+    document.addEventListener('DOMContentLoaded', updateHeaderHeight);
+    window.addEventListener('load', updateHeaderHeight);
+    window.addEventListener('resize', updateHeaderHeight);
+  })();
+</script>

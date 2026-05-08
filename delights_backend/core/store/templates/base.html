@@ -80,7 +80,13 @@
   }
 
   /* ─── Base ─── */
-  body { font-family: 'Manrope', sans-serif; background: #f9f9f9; color: #1a1c1c; }
+  body {
+    font-family: 'Manrope', sans-serif;
+    background-color: #fdfbfb;
+    background-image: url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23af101a' stroke-width='1.5' stroke-opacity='0.12'%3E%3Cg transform='translate(50, 50) rotate(15)'%3E%3Cpath d='M-10,-10 h20 v20 h-20 z M0,-10 v20 M-10,-2 h20'/%3E%3Cpath d='M0,-10 c-4,-5 -8,0 -2,3 c0,0 2,0 2,-3 z M0,-10 c4,-5 8,0 2,3 c0,0 -2,0 -2,-3 z'/%3E%3C/g%3E%3Cg transform='translate(180, 120) rotate(-20)'%3E%3Cpath d='M0,0 c-8,-6 -12,0 -4,4 l-10,12 M0,0 c8,-6 12,0 4,4 l10,12' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='0' cy='0' r='3' fill='%23af101a' fill-opacity='0.08' stroke='none'/%3E%3C/g%3E%3Cg transform='translate(320, 60) rotate(10) scale(0.8)'%3E%3Cpath d='M0,5 C-15,-10 -20,15 0,30 C20,15 15,-10 0,5 Z'/%3E%3C/g%3E%3Cg transform='translate(100, 250) rotate(-15) scale(0.9)'%3E%3Cpath d='M-10,-10 h20 v20 h-20 z M0,-10 v20 M-10,-2 h20'/%3E%3Cpath d='M0,-10 c-4,-5 -8,0 -2,3 c0,0 2,0 2,-3 z M0,-10 c4,-5 8,0 2,3 c0,0 -2,0 -2,-3 z'/%3E%3C/g%3E%3Cg transform='translate(250, 220) rotate(45)'%3E%3Cpath d='M0,-8 l2,6 6,2 -6,2 -2,6 -2,-6 -6,-2 6,-2 z' fill='%23af101a' fill-opacity='0.08' stroke='none'/%3E%3C/g%3E%3Cg transform='translate(60, 160) rotate(15) scale(0.7)'%3E%3Cpath d='M0,-8 l2,6 6,2 -6,2 -2,6 -2,-6 -6,-2 6,-2 z' fill='%23af101a' fill-opacity='0.08' stroke='none'/%3E%3C/g%3E%3Cg transform='translate(330, 310) rotate(25) scale(0.8)'%3E%3Cpath d='M0,0 c-8,-6 -12,0 -4,4 l-10,12 M0,0 c8,-6 12,0 4,4 l10,12' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='0' cy='0' r='3' fill='%23af101a' fill-opacity='0.08' stroke='none'/%3E%3C/g%3E%3Cg transform='translate(180, 360) rotate(-10) scale(0.6)'%3E%3Cpath d='M0,5 C-15,-10 -20,15 0,30 C20,15 15,-10 0,5 Z'/%3E%3C/g%3E%3Cg transform='translate(360, 180) rotate(-15) scale(0.5)'%3E%3Cpath d='M0,-8 l2,6 6,2 -6,2 -2,6 -2,-6 -6,-2 6,-2 z' fill='%23af101a' fill-opacity='0.08' stroke='none'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-size: 400px 400px;
+    color: #1a1c1c;
+  }
   h1, h2, h3, .font-serif { font-family: 'Noto Serif', serif; }
 
   /* ─── Scrollbar ─── */
@@ -89,274 +95,6 @@
 
   /* ─── Selection ─── */
   ::selection { background: #80011f; color: #fff; }
-
-  /* ─── Navbar ─── */
-  header.scrolled {
-    background: rgba(255,255,255,0.97) !important;
-    box-shadow: 0 2px 20px rgba(128,1,31,0.07);
-  }
-
-  .wd-logo {
-    font-family: 'Noto Serif', serif;
-    font-style: italic;
-    font-size: 1.35rem;
-    font-weight: 700;
-    color: #160507;
-    letter-spacing: -0.01em;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: opacity 0.2s ease;
-  }
-  .wd-logo:hover { opacity: 0.75; }
-  .wd-logo-gift {
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
-    flex-shrink: 0;
-    margin-bottom: 2px;
-  }
-  .wd-logo-gift .material-symbols-outlined {
-    font-size: 12px;
-    color: #af101a;
-    font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
-  }
-  .wd-logo-gift .gift-left { transform: rotate(-8deg); }
-  .wd-logo-gift .gift-right { transform: rotate(10deg) translateY(-1px); }
-
-  .wd-nav-link {
-    position: relative;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #3d2020;
-    text-decoration: none;
-    padding: 6px 0;
-    transition: color 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-  }
-  .wd-nav-link::after {
-    content: "";
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 1.5px;
-    background: #af101a;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.22s ease;
-  }
-  .wd-nav-link:hover { color: #af101a; }
-  .wd-nav-link:hover::after { transform: scaleX(1); }
-  .wd-nav-link.active { color: #af101a; }
-  .wd-nav-link.active::after { transform: scaleX(1); }
-
-  .wd-nav-dropdown { position: relative; }
-  .wd-nav-dropdown::after {
-    content: "";
-    position: absolute;
-    left: 0; right: 0;
-    top: 100%;
-    height: 16px;
-  }
-  .wd-nav-dropdown-menu {
-    position: absolute;
-    top: calc(100% + 16px);
-    left: 50%;
-    transform: translateX(-50%) translateY(-6px);
-    min-width: 240px;
-    padding: 8px;
-    background: #fff;
-    border: 1px solid #eddada;
-    border-radius: 18px;
-    box-shadow: 0 24px 56px rgba(128,1,31,0.11), 0 4px 12px rgba(0,0,0,0.05);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
-    z-index: 60;
-  }
-  .wd-nav-dropdown-menu::before {
-    content: "";
-    position: absolute;
-    top: -6px; left: 50%;
-    transform: translateX(-50%);
-    width: 12px; height: 6px;
-    background: #fff;
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    filter: drop-shadow(0 -1px 0 #eddada);
-  }
-  .wd-nav-dropdown:hover .wd-nav-dropdown-menu,
-  .wd-nav-dropdown:focus-within .wd-nav-dropdown-menu,
-  .wd-nav-dropdown.is-open .wd-nav-dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transform: translateX(-50%) translateY(0);
-  }
-  .wd-nav-dropdown-label {
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: #b09090;
-    padding: 6px 12px 4px;
-  }
-  .wd-nav-dropdown-link {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 12px;
-    border-radius: 12px;
-    color: #1a1c1c;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    text-transform: none;
-    transition: background 0.15s ease, color 0.15s ease;
-    text-decoration: none;
-  }
-  .wd-nav-dropdown-link:hover { background: #fdf0f0; color: #af101a; }
-  .wd-nav-dropdown-link:hover .material-symbols-outlined { color: #af101a; }
-  .wd-nav-dropdown-link .material-symbols-outlined {
-    font-size: 17px;
-    color: #c49090;
-    transition: color 0.15s ease;
-  }
-  .wd-nav-dropdown-divider {
-    height: 1px;
-    background: #f0e4e4;
-    margin: 4px 8px;
-  }
-
-  /* Search pill */
-  .wd-search-pill {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    border: 1px solid #e4beba;
-    border-radius: 999px;
-    background: #fdf7f7;
-    overflow: hidden;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  }
-  .wd-search-pill:focus-within {
-    border-color: #af101a;
-    box-shadow: 0 0 0 3px rgba(175,16,26,0.1);
-    background: #fff;
-  }
-  .wd-search-pill input {
-    background: transparent;
-    border: none;
-    outline: none;
-    font-size: 12px;
-    font-family: 'Manrope', sans-serif;
-    color: #1a1c1c;
-    padding: 7px 10px 7px 14px;
-    width: 160px;
-  }
-  .wd-search-pill input::placeholder { color: #b09090; }
-  .wd-search-pill button {
-    display: flex; align-items: center; justify-content: center;
-    background: transparent;
-    border: none;
-    color: #b09090;
-    padding: 7px 10px;
-    cursor: pointer;
-    transition: color 0.15s ease;
-  }
-  .wd-search-pill button:hover { color: #af101a; }
-
-  /* Cart icon — secondary, unobtrusive */
-  .wd-cart-btn {
-    position: relative;
-    display: flex; align-items: center; justify-content: center;
-    width: 36px; height: 36px;
-    border-radius: 10px;
-    color: #5b403d;
-    transition: all 0.2s ease;
-    text-decoration: none;
-  }
-  .wd-cart-btn:hover { color: #af101a; }
-  .wd-cart-count {
-    position: absolute;
-    top: -4px; right: -4px;
-    min-width: 17px; height: 17px;
-    padding: 0 4px;
-    border-radius: 999px;
-    background: #af101a;
-    color: #fff;
-    font-size: 10px;
-    font-weight: 800;
-    display: flex; align-items: center; justify-content: center;
-    line-height: 1;
-    border: 2px solid #fff;
-  }
-
-  /* Primary CTA in nav — this is the hero action, keep it prominent */
-  .wd-nav-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 9px 18px;
-    background: #af101a;
-    color: #fff;
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
-    box-shadow: 0 4px 14px rgba(175,16,26,0.28);
-  }
-  .wd-nav-cta:hover {
-    background: #930010;
-    box-shadow: 0 6px 20px rgba(175,16,26,0.38);
-    transform: translateY(-1px);
-  }
-  .wd-nav-cta:active { transform: scale(0.97); }
-
-  /* Mobile menu toggle */
-  .wd-mobile-toggle {
-    display: flex; align-items: center; justify-content: center;
-    width: 36px; height: 36px;
-    border-radius: 10px;
-    color: #5b403d;
-    cursor: pointer;
-    transition: color 0.2s ease;
-    background: none;
-    border: none;
-  }
-  .wd-mobile-toggle:hover { color: #af101a; }
-
-  /* Mobile drawer */
-  #mobileMenu {
-    background: #fff;
-    border-top: 1px solid #f0e4e4;
-  }
-  .wd-mobile-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 13px 0;
-    font-size: 13px;
-    font-weight: 600;
-    color: #1a1c1c;
-    border-bottom: 1px solid #f7f0f0;
-    text-decoration: none;
-    transition: color 0.15s ease;
-  }
-  .wd-mobile-link:hover { color: #af101a; }
-  .wd-mobile-link .material-symbols-outlined {
-    font-size: 18px;
-    color: #c49090;
-    flex-shrink: 0;
-  }
-  .wd-mobile-link:hover .material-symbols-outlined { color: #af101a; }
 
   /* Product Card */
   .wd-card {
@@ -476,196 +214,11 @@
 {% block extra_css %}{% endblock %}
 </head>
 
-<body class="min-h-screen flex flex-col bg-surface text-on-surface selection:bg-primary selection:text-on-primary">
+<body class="min-h-screen flex flex-col bg-surface text-on-surface selection:bg-primary selection:text-on-primary" data-favorite-ids="{{ favorite_product_ids|join:',' }}" data-favorites-count="{{ favorites_count|default:0 }}">
+{% csrf_token %}
 
-<!-- ═══════════════════════════════════════════
-     HEADER
-════════════════════════════════════════════ -->
-<header id="siteHeader" class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-[#f0e4e4] transition-shadow duration-300">
-
-  <nav class="flex items-center w-full px-6 md:px-10 py-0 h-[64px] max-w-[1400px] mx-auto gap-5" aria-label="Main navigation">
-
-    <!-- Logo -->
-    <a href="{% url 'home' %}" class="wd-logo flex-shrink-0" aria-label="WrappDelights home">
-      <span class="wd-logo-gift" aria-hidden="true">
-        <span class="material-symbols-outlined gift-left">redeem</span>
-        <span class="material-symbols-outlined gift-right">redeem</span>
-      </span>
-      WrappDelights
-    </a>
-
-    <!-- Center Nav -->
-    <div class="flex-1 flex justify-center">
-      <ul class="hidden md:flex items-center gap-7 list-none m-0 p-0" aria-label="Primary navigation">
-
-        <!-- Wedding -->
-        <li class="wd-nav-dropdown">
-          <a href="{% url 'products' %}?category=wedding"
-             class="wd-nav-link wd-nav-dropdown-trigger {% block nav_wedding %}{% endblock %}"
-             aria-haspopup="true" aria-expanded="false">
-            Wedding
-            <span class="material-symbols-outlined" style="font-size:14px;opacity:.6;">expand_more</span>
-          </a>
-          <div class="wd-nav-dropdown-menu" role="menu">
-            <p class="wd-nav-dropdown-label">Wedding Gifts</p>
-            <a href="{% url 'products' %}?category=wedding-return-gifts" class="wd-nav-dropdown-link" role="menuitem">
-              <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">favorite</span>
-              Wedding Return Gifts
-            </a>
-            <a href="{% url 'products' %}?category=wedding-accessories" class="wd-nav-dropdown-link" role="menuitem">
-              <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">diamond</span>
-              Wedding Accessories
-            </a>
-            <a href="{% url 'products' %}?category=wedding-hampers" class="wd-nav-dropdown-link" role="menuitem">
-              <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">redeem</span>
-              Wedding Hampers
-            </a>
-          </div>
-        </li>
-
-        <!-- Employees -->
-        <li class="wd-nav-dropdown">
-          <a href="{% url 'products' %}?category=employee"
-             class="wd-nav-link wd-nav-dropdown-trigger {% block nav_shop %}{% endblock %}"
-             aria-haspopup="true" aria-expanded="false">
-            Employees
-            <span class="material-symbols-outlined" style="font-size:14px;opacity:.6;">expand_more</span>
-          </a>
-          <div class="wd-nav-dropdown-menu" role="menu">
-            <p class="wd-nav-dropdown-label">Employee Gifts</p>
-            <a href="{% url 'products' %}?category=employee-welcome-kit" class="wd-nav-dropdown-link" role="menuitem">
-              <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">badge</span>
-              Employee Welcome Kit
-            </a>
-            <a href="{% url 'products' %}?category=office-welcome-kit" class="wd-nav-dropdown-link" role="menuitem">
-              <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">work</span>
-              Office Welcome Kit
-            </a>
-          </div>
-        </li>
-
-        <!-- Corporate -->
-        <li class="wd-nav-dropdown">
-          <a href="{% url 'products' %}?category=corporate"
-             class="wd-nav-link wd-nav-dropdown-trigger {% block nav_corporate %}{% endblock %}"
-             aria-haspopup="true" aria-expanded="false">
-            Corporate
-            <span class="material-symbols-outlined" style="font-size:14px;opacity:.6;">expand_more</span>
-          </a>
-          <div class="wd-nav-dropdown-menu" role="menu">
-            <p class="wd-nav-dropdown-label">Corporate Occasions</p>
-            <a href="{% url 'products' %}?category=corporate-christmas-gifts" class="wd-nav-dropdown-link" role="menuitem">
-              <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">celebration</span>
-              Corporate Christmas Gifts
-            </a>
-            <a href="{% url 'products' %}?category=corporate-womens-day-gifts" class="wd-nav-dropdown-link" role="menuitem">
-              <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">female</span>
-              Women's Day Gifts
-            </a>
-            <a href="{% url 'products' %}?category=corporate-new-year-gifts" class="wd-nav-dropdown-link" role="menuitem">
-              <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">new_releases</span>
-              New Year Gifts
-            </a>
-            <div class="wd-nav-dropdown-divider"></div>
-            <a href="{% url 'products' %}?category=corporate-diwali-gifts" class="wd-nav-dropdown-link" role="menuitem">
-              <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">light_mode</span>
-              Diwali Gifts
-            </a>
-          </div>
-        </li>
-
-        <!-- All Gifts -->
-        <li>
-          <a href="{% url 'products' %}"
-             class="wd-nav-link {% block nav_all %}{% endblock %}">
-            All Gifts
-          </a>
-        </li>
-
-      </ul>
-    </div>
-
-    <!-- Right: Search + Cart + CTA + Mobile Toggle -->
-    <div class="flex items-center gap-2 flex-shrink-0">
-
-      <!-- Search pill (desktop) -->
-      <form method="get" action="{% url 'products' %}" class="wd-search-pill hidden sm:flex" role="search" aria-label="Search products">
-        <input type="text" name="q" placeholder="Search gifts…" aria-label="Search products">
-        <button type="submit" aria-label="Search">
-          <span class="material-symbols-outlined" style="font-size:17px;">search</span>
-        </button>
-      </form>
-
-      <!-- Cart — deliberately low-key; the primary action is Build Hamper -->
-      {% with kit_count=request.session.kit|length %}
-        <a href="{% url 'custom_hamper_review' %}" class="wd-cart-btn" aria-label="View hamper kit">
-          <span class="material-symbols-outlined" style="font-size:21px;">shopping_bag</span>
-          {% if kit_count %}
-            <span class="wd-cart-count">{{ kit_count }}</span>
-          {% endif %}
-        </a>
-      {% endwith %}
-
-      <!-- Build Hamper CTA — the primary nav action -->
-      <a href="{% url 'custom_hamper' %}" class="wd-nav-cta hidden lg:inline-flex {% block nav_hamper %}{% endblock %}">
-        <span class="material-symbols-outlined" style="font-size:14px;">auto_fix_high</span>
-        Build Hamper
-      </a>
-
-      <!-- Mobile toggle -->
-      <button type="button" id="mobileMenuToggle"
-              class="wd-mobile-toggle md:hidden"
-              aria-expanded="false" aria-controls="mobileMenu" aria-label="Toggle navigation">
-        <span class="material-symbols-outlined" style="font-size:22px;" id="mobileMenuIcon">menu</span>
-      </button>
-    </div>
-  </nav>
-
-  <!-- Mobile Drawer -->
-  <div id="mobileMenu" class="hidden md:hidden" aria-label="Mobile navigation">
-    <div class="px-5 pt-4 pb-2">
-      <form method="get" action="{% url 'products' %}" class="wd-search-pill w-full" role="search">
-        <input type="text" name="q" placeholder="Search gifts…" aria-label="Search" style="width:100%;">
-        <button type="submit" aria-label="Search">
-          <span class="material-symbols-outlined" style="font-size:17px;">search</span>
-        </button>
-      </form>
-    </div>
-    <nav class="flex flex-col px-5 pb-5">
-      <a href="{% url 'products' %}?category=wedding" class="wd-mobile-link">
-        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">favorite</span>
-        Wedding
-      </a>
-      <a href="{% url 'products' %}?category=employee" class="wd-mobile-link">
-        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">badge</span>
-        Employees
-      </a>
-      <a href="{% url 'products' %}?category=corporate" class="wd-mobile-link">
-        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">business_center</span>
-        Corporate
-      </a>
-      <a href="{% url 'products' %}" class="wd-mobile-link">
-        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">inventory_2</span>
-        All Gifts
-      </a>
-      <a href="{% url 'custom_hamper' %}" class="wd-mobile-link">
-        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">redeem</span>
-        Build Custom Hamper
-      </a>
-      <a href="tel:{{ phone_number_raw|default:'+919309810348' }}" class="wd-mobile-link" style="border-bottom:none;">
-        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">call</span>
-        {{ phone_number|default:'+91 93098 10348' }}
-      </a>
-      <div class="mt-5">
-        <a href="{% url 'custom_hamper' %}" class="wd-nav-cta w-full justify-center" style="border-radius:12px;padding:12px 20px;">
-          <span class="material-symbols-outlined" style="font-size:15px;">auto_fix_high</span>
-          Build Your Hamper
-        </a>
-      </div>
-    </nav>
-  </div>
-
-</header>
+<!-- Include consistent navbar across all pages -->
+{% include 'partials/navbar.html' %}
 
 <!-- ═══════════════════════════════════════════
      PAGE CONTENT
@@ -674,101 +227,8 @@
   {% block content %}{% endblock %}
 </main>
 
-<!-- ═══════════════════════════════════════════
-     FOOTER
-     FIX: Unified city = "Pune, India" everywhere.
-     FIX: Removed "Pan-India Delivery" — replaced with "Bulk Gifting Specialists"
-════════════════════════════════════════════ -->
-<footer class="w-full mt-auto" style="background:#0f0304;color:#e8d5d5;">
-
-  <div class="max-w-[1400px] mx-auto px-6 md:px-10 pt-14 pb-10">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12">
-
-      <!-- Brand column -->
-      <div class="lg:col-span-2 flex flex-col gap-5">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <div style="width:8px;height:8px;border-radius:50%;background:#af101a;flex-shrink:0;"></div>
-          <span style="font-family:'Noto Serif',serif;font-style:italic;font-size:1.3rem;font-weight:700;color:#fff;letter-spacing:-0.01em;">WrappDelights</span>
-        </div>
-        <p style="font-size:13px;color:#a08080;line-height:1.7;max-width:300px;">
-          Premium curated gifting for weddings, corporate milestones, and every occasion in between. Proudly based in Pune.
-        </p>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <a href="tel:{{ phone_number_raw|default:'+919309810348' }}"
-             style="display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#c49090;text-decoration:none;transition:color .2s;"
-             onmouseover="this.style.color='#ff9090'" onmouseout="this.style.color='#c49090'">
-            <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">call</span>
-            {{ phone_number|default:'+91 93098 10348' }}
-          </a>
-          <a href="mailto:sales@wrappdelights.com"
-             style="display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#c49090;text-decoration:none;transition:color .2s;"
-             onmouseover="this.style.color='#ff9090'" onmouseout="this.style.color='#c49090'">
-            <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">mail</span>
-            sales@wrappdelights.com
-          </a>
-          <a href="https://wa.me/{{ whatsapp_number|default:'919309810348' }}?text=Hi%2C%20I%27d%20like%20to%20explore%20bulk%20gifting."
-             target="_blank" rel="noopener"
-             style="display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#c49090;text-decoration:none;transition:color .2s;"
-             onmouseover="this.style.color='#25D366'" onmouseout="this.style.color='#c49090'">
-            <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">chat</span>
-            WhatsApp Us
-          </a>
-        </div>
-        <div style="display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(175,16,26,.3);border-radius:999px;padding:5px 12px;width:fit-content;">
-          <span class="material-symbols-outlined" style="font-size:13px;color:#af101a;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">location_on</span>
-          <span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a08080;">Pune, India</span>
-        </div>
-      </div>
-
-      <!-- Catalog -->
-      <div class="flex flex-col gap-4">
-        <h5 style="font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#7a5a5a;margin-bottom:2px;">Catalog</h5>
-        {% for cat in categories|slice:":5" %}
-          <a href="{% url 'products' %}?category={{ cat.slug }}"
-             style="font-size:13px;color:#a08080;text-decoration:none;transition:color .2s;"
-             onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">
-            {{ cat.name }}
-          </a>
-        {% empty %}
-          <a href="{% url 'products' %}"
-             style="font-size:13px;color:#a08080;text-decoration:none;"
-             onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">Browse All</a>
-        {% endfor %}
-      </div>
-
-      <!-- Gifting -->
-      <div class="flex flex-col gap-4">
-        <h5 style="font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#7a5a5a;margin-bottom:2px;">Gifting</h5>
-        <a href="{% url 'custom_hamper' %}" style="font-size:13px;color:#a08080;text-decoration:none;" onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">Build Custom Hamper</a>
-        <a href="{% url 'products' %}?category=wedding" style="font-size:13px;color:#a08080;text-decoration:none;" onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">Wedding Gifts</a>
-        <a href="{% url 'products' %}?category=corporate" style="font-size:13px;color:#a08080;text-decoration:none;" onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">Corporate Gifting</a>
-        <a href="{% url 'products' %}?category=employee" style="font-size:13px;color:#a08080;text-decoration:none;" onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">Employee Kits</a>
-      </div>
-
-      <!-- Company -->
-      <div class="flex flex-col gap-4">
-        <h5 style="font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#7a5a5a;margin-bottom:2px;">Company</h5>
-        <a href="{% url 'home' %}" style="font-size:13px;color:#a08080;text-decoration:none;" onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">About Us</a>
-        <a href="#" style="font-size:13px;color:#a08080;text-decoration:none;" onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">Case Studies</a>
-        <a href="#" style="font-size:13px;color:#a08080;text-decoration:none;" onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">Privacy Policy</a>
-        <a href="#" style="font-size:13px;color:#a08080;text-decoration:none;" onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">Terms of Service</a>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Bottom bar -->
-  <div style="border-top:1px solid rgba(175,16,26,.18);padding:16px 0;">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-10 flex flex-col sm:flex-row justify-between items-center gap-3">
-      <span style="font-size:11px;color:#5a3a3a;">© {% now "Y" %} WrappDelights. All rights reserved. — Premium B2B Gifting, Pune.</span>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <div style="width:5px;height:5px;border-radius:50%;background:#af101a;opacity:.5;"></div>
-        <span style="font-size:11px;color:#5a3a3a;font-family:'Noto Serif',serif;font-style:italic;">Curated with love.</span>
-      </div>
-    </div>
-  </div>
-
-</footer>
+<!-- Include consistent footer across all pages -->
+{% include 'partials/footer.html' %}
 
 <!-- WHATSAPP FLOAT -->
 <a class="wa-float"
@@ -784,8 +244,101 @@
 {% block extra_js %}{% endblock %}
 
 <script>
-(function () {
-  'use strict';
+  // ═══════════════════════════════════════════
+  // FAVORITES SYSTEM
+  // ═══════════════════════════════════════════
+
+  const FAVORITES_ENDPOINT = '{% url "toggle_favorite" %}';
+  const FAVORITE_STATE = new Set((document.body.dataset.favoriteIds || '').split(',').filter(Boolean));
+
+  function getCsrfToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+  }
+
+  function setFavoritesCount(count) {
+    const countBadge = document.getElementById('favoritesCount');
+    const favBtn = document.getElementById('favoritesBtn');
+    document.body.dataset.favoritesCount = String(count);
+
+    if (!countBadge || !favBtn) return;
+
+    if (count > 0) {
+      countBadge.textContent = count;
+      countBadge.style.display = 'flex';
+      favBtn.classList.add('has-favorites');
+    } else {
+      countBadge.style.display = 'none';
+      favBtn.classList.remove('has-favorites');
+    }
+  }
+
+  function setFavoriteButtonState(btn, isFavorited) {
+    btn.classList.toggle('favorited', isFavorited);
+    btn.setAttribute('aria-pressed', isFavorited ? 'true' : 'false');
+    const icon = btn.querySelector('.material-symbols-outlined');
+    if (icon) {
+      icon.style.fontVariationSettings = isFavorited
+        ? "'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24"
+        : "'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24";
+    }
+  }
+
+  function syncFavoriteButtons(productId, isFavorited) {
+    document.querySelectorAll(`[data-hamper-id="${productId}"], [data-product-id="${productId}"]`).forEach(btn => {
+      setFavoriteButtonState(btn, isFavorited);
+    });
+  }
+
+  function bindFavoriteButtons() {
+    document.querySelectorAll('.category-product-wishlist:not([data-favorites-bound]), .favorite-toggle:not([data-favorites-bound])').forEach(btn => {
+      const productId = btn.getAttribute('data-hamper-id') || btn.getAttribute('data-product-id');
+      if (!productId) return;
+
+      btn.setAttribute('data-favorites-bound', 'true');
+      setFavoriteButtonState(btn, FAVORITE_STATE.has(String(productId)));
+
+      btn.addEventListener('click', async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        try {
+          const response = await fetch(FAVORITES_ENDPOINT, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': getCsrfToken(),
+            },
+            body: JSON.stringify({ hamper_id: parseInt(productId, 10) }),
+          });
+
+          const data = await response.json();
+          if (!response.ok || !data.success) return;
+
+          if (data.is_favorited) {
+            FAVORITE_STATE.add(String(productId));
+          } else {
+            FAVORITE_STATE.delete(String(productId));
+          }
+
+          setFavoritesCount(data.count || FAVORITE_STATE.size);
+          syncFavoriteButtons(String(productId), data.is_favorited);
+        } catch (error) {
+          console.error('Favorite error:', error);
+        }
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    setFavoritesCount(Number(document.body.dataset.favoritesCount || FAVORITE_STATE.size || 0));
+    bindFavoriteButtons();
+  });
+
+  const favoriteObserver = new MutationObserver(function() {
+    bindFavoriteButtons();
+  });
+
+  favoriteObserver.observe(document.body, { childList: true, subtree: true });
 
   /* Header scroll shadow */
   var header = document.getElementById('siteHeader');
@@ -847,8 +400,6 @@
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAllDropdowns(); });
   window.addEventListener('resize', function () { if (window.innerWidth < 768) closeAllDropdowns(); });
-
-})();
 </script>
 
 </body>

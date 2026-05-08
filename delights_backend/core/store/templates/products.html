@@ -138,7 +138,10 @@
   .prod-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    gap: 20px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 12px;
   }
 
   /* ─── Product card ─── */
@@ -147,6 +150,7 @@
     border: 1px solid rgba(228,190,186,.4);
     border-radius: 16px;
     overflow: hidden;
+    position: relative;
     display: flex; flex-direction: column;
     box-shadow: 0 4px 16px rgba(0,0,0,.04);
     transition: border-color .3s ease, box-shadow .3s ease, transform .3s ease;
@@ -161,6 +165,29 @@
     overflow: hidden; background: #fff8f7;
     position: relative; display: block;
   }
+  .favorite-toggle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    border: none;
+    background: rgba(255,255,255,0.9);
+    color: #5b403d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+    z-index: 2;
+  }
+  .favorite-toggle:hover,
+  .favorite-toggle.favorited {
+    background: #af101a;
+    color: #fff;
+  }
   .prod-card-img img {
     width: 100%; height: 100%;
     object-fit: cover;
@@ -169,7 +196,7 @@
   }
   .prod-card:hover .prod-card-img img { transform: scale(1.06); }
   .prod-card-img-empty {
-    width: 100%; height: 100%; min-height: 200px;
+    width: 100%; height: 100%; min-height: 160px;
     display: flex; align-items: center; justify-content: center;
     font-size: 9px; font-weight: 800; text-transform: uppercase;
     letter-spacing: .14em; color: #8f6f6c; background: #f3eded;
@@ -182,8 +209,12 @@
   }
 
   .prod-card-body {
-    padding: 16px 18px 18px;
+    padding: 12px;
     display: flex; flex-direction: column; flex: 1;
+  }
+  @media (min-width: 768px) {
+    .prod-card-img { min-height: 280px; }
+    .prod-card-body { padding: 18px 16px 20px; }
   }
   .prod-card-top {
     display: flex; align-items: flex-start;
@@ -191,26 +222,26 @@
   }
   .prod-card-name {
     font-family: 'Noto Serif', serif;
-    font-size: 14px; font-weight: 700;
-    color: #1a1c1c; line-height: 1.35;
+    font-size: 15px; font-weight: 700;
+    color: #1a1c1c; line-height: 1.4;
     text-decoration: none;
     transition: color .2s;
   }
   .prod-card:hover .prod-card-name { color: #af101a; }
   .prod-card-price {
-    font-size: 13px; font-weight: 900;
+    font-size: 14px; font-weight: 900;
     color: #af101a; white-space: nowrap; flex-shrink: 0;
   }
   .prod-card-desc {
-    font-size: 11px; color: #5b403d; line-height: 1.65;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-    overflow: hidden; margin-bottom: 14px; flex: 1;
+    font-size: 12px; color: #5b403d; line-height: 1.6;
+    display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical;
+    overflow: hidden; margin-bottom: 12px; flex: 1;
   }
   .prod-card-cta {
     display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-    width: 100%; padding: 11px;
+    width: 100%; padding: 12px;
     background: #af101a; color: #fff;
-    font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .18em;
+    font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .15em;
     border: none; border-radius: 10px; cursor: pointer; text-decoration: none;
     transition: background .2s, transform .1s;
     box-shadow: 0 4px 14px rgba(175,16,26,.2);
@@ -245,17 +276,17 @@
   }
 
   /* ─── Responsive ─── */
-  @media (max-width: 1100px) { .prod-grid { grid-template-columns: repeat(3, 1fr); } }
-  @media (max-width: 768px)  { .prod-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 1200px) { .prod-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 768px)  { .prod-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; } }
+  @media (max-width: 480px)  { .prod-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
   @media (max-width: 480px)  {
-    .prod-grid { grid-template-columns: 1fr; }
     .catalog-hero { padding: 28px 16px 32px; }
   }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="pt-[68px]">
+<!-- removed hard top padding wrapper to avoid double spacing under fixed header -->
 
   <!-- ═══════════════════════════════════════════
        VALUE STRIP (marquee) — mirrors home.html
@@ -280,9 +311,78 @@
   <!-- ═══════════════════════════════════════════
        CATALOG HERO
   ════════════════════════════════════════════ -->
+  {% with cat=request.GET.category %}
+  {% if cat == 'wedding' or cat == 'wedding-return-gifts' or cat == 'wedding-accessories' or cat == 'wedding-hampers' or cat == 'employee' or cat == 'employee-welcome-kit' or cat == 'office-welcome-kit' or cat == 'corporate-christmas-gifts' %}
+    <section class="relative w-full h-[360px] md:h-[480px] flex items-center justify-center overflow-hidden bg-[#1a0a0b]">
+      {% if cat == 'wedding' %}
+        <img src="https://images.unsplash.com/photo-1617040289502-4a3a9fbb2538?q=80&w=1470&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover object-center" alt="Wedding Gifts">
+      {% elif cat == 'wedding-return-gifts' %}
+        <img src="https://images.unsplash.com/photo-1571915096107-c6606c216058?q=80&w=1469&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover object-center" alt="Wedding Return Gifts">
+      {% elif cat == 'wedding-accessories' %}
+        <img src="https://images.unsplash.com/photo-1764269714582-d994dfefb049?q=80&w=1631&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover object-center" alt="Wedding Accessories">
+      {% elif cat == 'wedding-hampers' %}
+        <img src="https://images.unsplash.com/photo-1508899203029-1c9eb493c9bd?q=80&w=1470&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover object-center" alt="Wedding Hampers">
+      {% elif cat == 'employee' %}
+        <img src="https://images.unsplash.com/photo-1610187224249-1c5aa1841c2c?q=80&w=1470&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover object-center" alt="Employee Gifts">
+      {% elif cat == 'employee-welcome-kit' %}
+        <img src="https://images.unsplash.com/photo-1505753255122-ecb7f694d6c4?q=80&w=1473&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover object-center" alt="Employee Welcome Kit">
+      {% elif cat == 'office-welcome-kit' %}
+        <img src="https://images.unsplash.com/photo-1510828325835-5940110b482a?q=80&w=1428&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover object-center" alt="Office Welcome Kit">
+      {% elif cat == 'corporate-christmas-gifts' %}
+        <img src="https://images.unsplash.com/photo-1618914241432-5043b1b4acf5?q=80&w=1470&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover object-center" alt="Corporate Christmas Gifts">
+      {% endif %}
+
+      <!-- Gradient Overlay -->
+      <div class="absolute inset-0 bg-black/40"></div>
+
+      <div class="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 text-center anim-fade-up">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center justify-center gap-1.5 mb-6 text-white/70" aria-label="Breadcrumb"
+             style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.14em;">
+          <a href="{% url 'home' %}" style="color:inherit;text-decoration:none;transition:color .2s;"
+             onmouseover="this.style.color='#fff'" onmouseout="this.style.color='inherit'">Home</a>
+          <span class="material-symbols-outlined" style="font-size:14px;color:rgba(255,255,255,0.4);">chevron_right</span>
+          <a href="{% url 'products' %}" style="color:inherit;text-decoration:none;transition:color .2s;"
+             onmouseover="this.style.color='#fff'" onmouseout="this.style.color='inherit'">Catalog</a>
+          <span class="material-symbols-outlined" style="font-size:14px;color:rgba(255,255,255,0.4);">chevron_right</span>
+          <span style="color:#fff;">{{ active_category_label|default:cat|capfirst }}</span>
+        </nav>
+        
+        <h1 class="font-serif text-[3rem] md:text-[4rem] leading-[1.1] text-white mb-4 drop-shadow-md">
+          {{ active_category_label|default:cat|capfirst }}
+        </h1>
+        <p class="text-white/90 text-sm md:text-base leading-relaxed max-w-2xl mx-auto tracking-wide drop-shadow-md">
+          Curated premium collections. Experience gifting that leaves a lasting impression.
+        </p>
+      </div>
+    </section>
+  {% else %}
   <section class="catalog-hero px-6 md:px-12 py-14 md:py-20">
-    <div class="catalog-hero-texture"></div>
-    <div class="relative z-10 max-w-7xl mx-auto">
+    {% with cat=request.GET.category %}
+      {% if cat == 'corporate' %}
+        <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=1470&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover object-center" alt="Corporate Gifts">
+        <div class="absolute inset-0 bg-gradient-to-r from-[#fdf7f6] via-[#fdf7f6]/90 to-[#fce8e8]/40 mix-blend-overlay"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#fdf7f6] via-[#fdf7f6]/85 to-transparent"></div>
+      {% elif cat == 'corporate-womens-day-gifts' %}
+        <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?q=80&w=1470&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover object-center" alt="Women's Day Gifts">
+        <div class="absolute inset-0 bg-gradient-to-r from-[#fdf7f6] via-[#fdf7f6]/90 to-[#fce8e8]/40 mix-blend-overlay"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#fdf7f6] via-[#fdf7f6]/85 to-transparent"></div>
+      {% elif cat == 'corporate-new-year-gifts' %}
+        <img src="https://images.unsplash.com/photo-1608416026650-66b4e0c0c301?q=80&w=1470&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover object-center" alt="New Year Gifts">
+        <div class="absolute inset-0 bg-gradient-to-r from-[#fdf7f6] via-[#fdf7f6]/90 to-[#fce8e8]/40 mix-blend-overlay"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#fdf7f6] via-[#fdf7f6]/85 to-transparent"></div>
+      {% elif cat == 'corporate-diwali-gifts' %}
+        <img src="https://images.unsplash.com/photo-1610983084588-90376de9cf57?q=80&w=1473&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover object-center" alt="Diwali Gifts">
+        <div class="absolute inset-0 bg-gradient-to-r from-[#fdf7f6] via-[#fdf7f6]/90 to-[#fce8e8]/40 mix-blend-overlay"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#fdf7f6] via-[#fdf7f6]/85 to-transparent"></div>
+      {% else %}
+        <img src="https://images.unsplash.com/photo-1608679152045-b827c386d312?q=80&w=1470&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover object-center" alt="All Gifts">
+        <div class="absolute inset-0 bg-gradient-to-r from-[#fdf7f6] via-[#fdf7f6]/90 to-[#fce8e8]/40 mix-blend-overlay"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#fdf7f6] via-[#fdf7f6]/85 to-transparent"></div>
+      {% endif %}
+    {% endwith %}
+    
+    <div class="relative z-10 w-full mx-auto px-3 md:px-6">
 
       <!-- Breadcrumb -->
       <nav class="flex items-center gap-1.5 mb-8 anim-fade-up" aria-label="Breadcrumb"
@@ -372,14 +472,16 @@
       </div>
     </div>
   </section>
+  {% endif %}
+  {% endwith %}
 
 
   <!-- ═══════════════════════════════════════════
        CATEGORY CHIPS (only on un-filtered view)
   ════════════════════════════════════════════ -->
   {% if categories and not active_category %}
-  <div class="bg-white border-b border-[#f0e4e4] py-8 px-6 md:px-12">
-    <div class="max-w-7xl mx-auto reveal">
+  <div class="bg-white border-b border-[#f0e4e4] py-8 px-3 md:px-6">
+    <div class="w-full mx-auto px-3 md:px-6 reveal\">
       <div class="flex justify-center flex-wrap gap-6">
         {% for cat in categories %}
           <a href="{% url 'products' %}?category={{ cat.slug }}"
@@ -403,7 +505,7 @@
   <!-- ═══════════════════════════════════════════
        MAIN CATALOG BODY
   ════════════════════════════════════════════ -->
-  <section class="py-10 px-6 md:px-12 max-w-7xl mx-auto">
+  <section class="py-10 px-3 md:px-6 w-full">
 
     <!-- Toolbar: sort + active filters -->
     <div class="flex flex-wrap items-center gap-3 mb-8 reveal">
@@ -478,33 +580,37 @@
     <!-- ─── Product Grid ─── -->
     <div class="prod-grid reveal">
       {% for product in products %}
-        <article class="prod-card">
+        <article class="prod-card group">
 
           <!-- Image -->
           <a href="{% url 'product_detail' product.id %}" class="prod-card-img">
-            {% if product.cover_image %}
-              <img src="{{ product.cover_image_url }}" alt="{{ product.name }}" loading="lazy">
+            {% if product.cover_image_url %}
+              <img src="{{ product.cover_image_url }}" alt="{{ product.name }}" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0">
+              {% if product.gallery_image_url and product.gallery_image_url != product.cover_image_url %}
+                <img src="{{ product.gallery_image_url }}" alt="{{ product.name }}" loading="lazy" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              {% endif %}
             {% else %}
               <div class="prod-card-img-empty">
                 <span class="material-symbols-outlined" style="font-size:36px;color:#c9a8a8;">image_not_supported</span>
               </div>
             {% endif %}
-
-            <!-- Badges -->
-            <div class="prod-img-badges">
-              {% if product.is_featured %}
-                <span class="wd-badge wd-badge-primary">Featured</span>
-              {% endif %}
-              {% if product.is_new %}
-                <span class="wd-badge wd-badge-surface">New</span>
-              {% else %}
-                <span class="wd-badge wd-badge-surface">Bulk Friendly</span>
-              {% endif %}
-            </div>
-
-            <!-- Image -->
-            <img src="{{ product.cover_image_url }}" alt="{{ product.name }}" loading="lazy">
           </a>
+
+          <button type="button" class="favorite-toggle" aria-label="Add to favorites" data-hamper-id="{{ product.id }}" aria-pressed="false">
+            <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;">favorite</span>
+          </button>
+
+          <!-- Badges -->
+          <div class="prod-img-badges">
+            {% if product.is_featured %}
+              <span class="wd-badge wd-badge-primary">Featured</span>
+            {% endif %}
+            {% if product.is_new %}
+              <span class="wd-badge wd-badge-surface">New</span>
+            {% else %}
+              <span class="wd-badge wd-badge-surface">Bulk Friendly</span>
+            {% endif %}
+          </div>
 
           <!-- Body -->
           <div class="prod-card-body">
@@ -544,8 +650,8 @@
   <!-- ═══════════════════════════════════════════
        CORPORATE CTA BANNER  (mirrors home.html)
   ════════════════════════════════════════════ -->
-  <section class="py-14 px-6 md:px-12">
-    <div class="max-w-7xl mx-auto reveal">
+  <section class="py-14 px-3 md:px-6">
+    <div class="w-full mx-auto px-3 md:px-6 reveal\">
       <div style="background:linear-gradient(135deg,#fff8f7 0%,#fce8e8 100%);border:1px solid #e4beba;border-radius:20px;overflow:hidden;position:relative;padding:48px 48px;display:flex;flex-direction:column;gap:24px;"
            class="md:flex-row md:items-center md:justify-between">
         <!-- BG accent -->
@@ -582,7 +688,7 @@
     </div>
   </section>
 
-</div>
+<!-- end content (removed wrapper) -->
 {% endblock %}
 
 {% block extra_js %}

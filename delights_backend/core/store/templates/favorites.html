@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}My Favorites | WrappDelights{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb -->
+<div class="bg-[#fff8f7] border-b border-[#f0dcdc]">
+  <div class="w-full max-w-7xl mx-auto px-6 md:px-12 py-6">
+    <div class="flex items-center gap-2 text-sm">
+      <a href="{% url 'home' %}" class="text-primary hover:opacity-70">Home</a>
+      <span class="text-[#999]">/</span>
+      <span class="text-on-surface font-medium">My Favorites</span>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<main class="flex-1 py-16 md:py-24">
+  <div class="w-full max-w-7xl mx-auto px-6 md:px-12">
+    <div class="mb-12">
+      <h1 class="text-4xl md:text-5xl font-serif text-on-surface mb-2">My Favorite Hampers</h1>
+      <p class="text-secondary text-lg">{% if hampers %}You have {{ total_count }} favorite product{{ total_count|pluralize }}.{% else %}No favorites yet!{% endif %}</p>
+    </div>
+
+    {% if hampers %}
+      <div id="favoritesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {% for hamper in hampers %}
+          <div class="favorite-card group">
+            <div class="group bg-white border border-[#f0dcdc] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
+              <!-- Image -->
+              <div class="relative overflow-hidden bg-[#fff8f7] aspect-square">
+                  {% if hamper.cover_image_url %}
+                    <img src="{{ hamper.cover_image_url }}" alt="{{ hamper.name }}" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0">
+                    {% if hamper.gallery_image_url and hamper.gallery_image_url != hamper.cover_image_url %}
+                      <img src="{{ hamper.gallery_image_url }}" alt="{{ hamper.name }}" loading="lazy" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    {% endif %}
+                {% else %}
+                  <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#fce8e8] to-[#fff0f0]">
+                    <span class="material-symbols-outlined text-5xl text-gray-300">card_giftcard</span>
+                  </div>
+                {% endif %}
+                
+                <!-- Favorite Button -->
+                <button class="favorite-btn absolute top-3 right-3 w-10 h-10 rounded-full bg-white/90 hover:bg-primary hover:text-white flex items-center justify-center transition-all shadow-md" data-product-id="{{ hamper.id }}">
+                  <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">favorite</span>
+                </button>
+              </div>
+
+              <!-- Content -->
+              <div class="p-5 flex flex-col">
+                <h3 class="text-sm font-bold text-on-surface mb-2 line-clamp-2 group-hover:text-primary transition-colors">{{ hamper.name }}</h3>
+                {% if hamper.category %}
+                  <p class="text-xs text-secondary mb-3">{{ hamper.category.name }}</p>
+                {% endif %}
+                <div class="flex items-center justify-between mt-auto pt-3 border-t border-[#f0dcdc]">
+                  {% if hamper.base_price %}
+                    <span class="text-primary font-bold text-base">₹{{ hamper.base_price|floatformat:0 }}</span>
+                  {% else %}
+                    <span class="text-secondary text-sm">{{ hamper.price_label }}</span>
+                  {% endif %}
+                  <a href="{% url 'product_detail' hamper.id %}" class="text-[9px] font-bold uppercase tracking-widest text-secondary border border-outline-variant rounded-lg px-3 py-1.5 hover:border-primary hover:text-primary transition-all">
+                    View
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center py-20">
+        <div class="mb-8">
+          <span class="material-symbols-outlined text-8xl text-[#ddd]" style="display:inline-block;">favorite</span>
+        </div>
+        <h2 class="text-3xl font-serif text-on-surface mb-3">No Favorites Yet</h2>
+        <p class="text-secondary text-lg mb-8 max-w-md mx-auto">Start exploring our collection and mark your favorite hampers to find them easily later!</p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="{% url 'products' %}" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white rounded-xl font-bold text-sm uppercase tracking-widest hover:bg-on-primary-fixed-variant transition-all">
+            <span class="material-symbols-outlined">inventory_2</span>
+            Explore Products
+          </a>
+          <a href="{% url 'home' %}" class="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-primary text-primary rounded-xl font-bold text-sm uppercase tracking-widest hover:bg-primary hover:text-white transition-all">
+            <span class="material-symbols-outlined">home</span>
+            Back to Home
+          </a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</main>
+
+<script>
+  // Remove from favorites
+  document.querySelectorAll('.favorite-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const hamper_id = btn.getAttribute('data-product-id');
+      
+      fetch('{% url "toggle_favorite" %}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+        },
+        body: JSON.stringify({ hamper_id: parseInt(hamper_id) })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success && !data.is_favorited) {
+          // Remove the card from the page
+          btn.closest('.favorite-card')?.remove();
+
+          const countEl = document.getElementById('favoritesCount');
+          if (countEl) {
+            countEl.textContent = data.count;
+            countEl.style.display = data.count > 0 ? 'flex' : 'none';
+          }
+          const favBtn = document.getElementById('favoritesBtn');
+          if (favBtn) {
+            if (data.count > 0) {
+              favBtn.classList.add('has-favorites');
+            } else {
+              favBtn.classList.remove('has-favorites');
+            }
+          }
+          
+          // If no more favorites, show empty state
+          const grid = document.getElementById('favoritesGrid');
+          if (grid && grid.children.length === 0) {
+            window.location.reload();
+          }
+        }
+      })
+      .catch(err => console.error('Error:', err));
+    });
+  });
+</script>
+
+{% endblock %}

@@ -41,6 +41,8 @@ from delights_backend.core.store.views import (
     corporate_success,
     search_view,
     page_not_found,
+    toggle_favorite,
+    favorites_list,
 )
 
 admin.site.has_permission = lambda request: bool(
@@ -72,6 +74,10 @@ urlpatterns = [
     path("custom-hamper/api/kit/clear/", custom_hamper_clear, name="custom_hamper_clear"),
     path("custom-hamper/success/", corporate_success, name="corporate_success"),
     path("search/", search_view, name="search"),
+
+    # Favorites
+    path("api/favorites/toggle/", toggle_favorite, name="toggle_favorite"),
+    path("favorites/", favorites_list, name="favorites"),
 
     # Dashboard — overview
     path("dashboard/", dashboard, name="dashboard"),

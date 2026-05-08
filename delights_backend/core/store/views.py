@@ -14,9 +14,10 @@ from django.db.models import Q, Prefetch
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from delights_backend.core.store import models
-from .models import Category, CorporateInquiry, Hamper, HamperImage, HomepageSection
+from .models import Category, CorporateInquiry, Hamper, HamperImage, HomepageSection, Favorite
 from django.http import JsonResponse
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 
 logger = logging.getLogger(__name__)
 
@@ -420,7 +421,7 @@ def corporate(request):
 
 
 def home(request):
-    active_hampers = Hamper.objects.filter(is_active=True).select_related("category")
+    active_hampers = Hamper.objects.filter(is_active=True).select_related("category").prefetch_related("images")
 
     featured_hampers = active_hampers.filter(is_featured=True)[:12]
     event_hampers = active_hampers.filter(is_event_special=True)[:12]
@@ -429,6 +430,35 @@ def home(request):
     corporate_welcome = active_hampers.filter(homepage_sections__section_type="corporate_welcome").distinct()[:12]
     event_section = active_hampers.filter(homepage_sections__section_type="event_hampers").distinct()[:12]
     festival_hampers = active_hampers.filter(homepage_sections__section_type="festival_hampers").distinct()[:12]
+
+    # Group products by 5 main categories for "Most Loved Gift Hampers" section
+    products_by_category = {
+        "Hampers": active_hampers[:20],  # Top 20 hampers
+        "Wedding": active_hampers.filter(
+            Q(categories__slug__icontains='wedding') | Q(category__slug__icontains='wedding')
+        ).distinct()[:20],
+        "Corporate": active_hampers.filter(
+            Q(categories__slug__icontains='corporate') | Q(category__slug__icontains='corporate')
+        ).distinct()[:20],
+        "Employee Kits": active_hampers.filter(
+            Q(categories__slug__icontains='employee') | Q(category__slug__icontains='employee') |
+            Q(categories__slug__icontains='office') | Q(category__slug__icontains='office')
+        ).distinct()[:20],
+        "Return Gifts": active_hampers.filter(
+            Q(categories__slug__icontains='return') | Q(category__slug__icontains='return')
+        ).distinct()[:20],
+    }
+    products_by_category_order = [
+        "Hampers",
+        "Wedding",
+        "Corporate",
+        "Employee Kits",
+        "Return Gifts",
+    ]
+    ordered_products_by_category = [
+        (category_name, products_by_category.get(category_name, []))
+        for category_name in products_by_category_order
+    ]
 
     section_prefetch = Prefetch(
         "hampers",
@@ -449,6 +479,9 @@ def home(request):
         "home.html",
         {
             "featured_hampers": featured_hampers,
+            "featured_products": featured_hampers,  # For carousel section
+            "products_by_category": products_by_category,
+            "ordered_products_by_category": ordered_products_by_category,
             "best_sellers": best_sellers,
             "corporate_welcome_hampers": corporate_welcome,
             "event_hampers": event_hampers if event_hampers.exists() else event_section,
@@ -484,7 +517,7 @@ def product_list(request):
         ).distinct()
     
     # Apply select_related and prefetch_related after filtering to ensure clean queries
-    hampers = hampers.select_related("category").prefetch_related("categories")
+    hampers = hampers.select_related("category").prefetch_related("categories", "images")
     if search_query:
         hampers = hampers.filter(
             Q(name__icontains=search_query)
@@ -731,12 +764,18 @@ def custom_hamper_add_item(request):
         return JsonResponse({"error": "Product not found."}, status=404)
 
     kit = _get_session_kit(request)
-    for item in kit:
-        if item.get("product_id") == hamper.id:
-            item["quantity"] = int(item.get("quantity") or 1) + quantity
-            break
+    
+    if step_slug == "base":
+        # Mutually exclusive selection for the 'base' (box) step
+        kit = [item for item in kit if item.get("step") != "base"]
+        kit.append(_serialize_hamper_for_kit(hamper, 1, step_slug))
     else:
-        kit.append(_serialize_hamper_for_kit(hamper, quantity, step_slug))
+        for item in kit:
+            if item.get("product_id") == hamper.id:
+                item["quantity"] = int(item.get("quantity") or 1) + quantity
+                break
+        else:
+            kit.append(_serialize_hamper_for_kit(hamper, quantity, step_slug))
 
     _save_session_kit(request, kit)
     return _kit_response(kit)
@@ -809,7 +848,7 @@ def search_view(request):
             | Q(included_items__icontains=query)
             | Q(category__name__icontains=query)
             | Q(categories__name__icontains=query)
-        ).select_related("category").prefetch_related("categories").distinct()
+        ).select_related("category").prefetch_related("categories", "images").distinct()
 
     return render(
         request,
@@ -1300,3 +1339,88 @@ def dashboard_delete_inquiry(request, inquiry_id):
         messages.success(request, "Inquiry deleted.")
         return redirect("dashboard_corporate")
     return render(request, "dashboard/confirm_delete.html", {"object": inquiry, "type": "Corporate Inquiry"})
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def toggle_favorite(request):
+    """Toggle favorite status for a hamper (session-based or user-based)."""
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed"}, status=405)
+    
+    try:
+        data = _json_body(request)
+        hamper_id = data.get("hamper_id")
+        
+        if not hamper_id:
+            return JsonResponse({"error": "hamper_id required"}, status=400)
+        
+        hamper = get_object_or_404(Hamper, id=hamper_id)
+        
+        # Determine if using session or user auth
+        session_key = request.session.session_key
+        if not session_key and not request.user.is_authenticated:
+            request.session.create()
+            session_key = request.session.session_key
+        user = request.user if request.user.is_authenticated else None
+        
+        if not session_key and not user:
+            return JsonResponse({"error": "No session or user found"}, status=400)
+        
+        # Check if already favorited
+        if user:
+            favorite = Favorite.objects.filter(user=user, hamper=hamper).first()
+        else:
+            favorite = Favorite.objects.filter(session_key=session_key, hamper=hamper).first()
+        
+        if favorite:
+            # Remove from favorites
+            favorite.delete()
+            is_favorited = False
+        else:
+            # Add to favorites
+            if user:
+                Favorite.objects.create(user=user, hamper=hamper)
+            else:
+                Favorite.objects.create(session_key=session_key, hamper=hamper)
+            is_favorited = True
+        
+        # Get new count
+        if user:
+            count = Favorite.objects.filter(user=user).count()
+        else:
+            count = Favorite.objects.filter(session_key=session_key).count()
+        
+        return JsonResponse({
+            "success": True,
+            "is_favorited": is_favorited,
+            "count": count,
+            "hamper_id": hamper_id,
+        })
+    
+    except Exception as e:
+        logger.exception("Error toggling favorite")
+        return JsonResponse({"error": str(e)}, status=500)
+
+
+def favorites_list(request):
+    """Display user's favorite hampers."""
+    if request.user.is_authenticated:
+        favorites = Favorite.objects.filter(user=request.user).select_related('hamper').prefetch_related('hamper__images').order_by('-created_at')
+    else:
+        session_key = request.session.session_key
+        if not session_key:
+            request.session.create()
+            session_key = request.session.session_key
+        favorites = Favorite.objects.filter(session_key=session_key).select_related('hamper').prefetch_related('hamper__images').order_by('-created_at')
+    
+    hampers = [fav.hamper for fav in favorites if fav.hamper.is_active]
+    
+    return render(
+        request,
+        "favorites.html",
+        {
+            "hampers": hampers,
+            "total_count": len(hampers),
+        },
+    )

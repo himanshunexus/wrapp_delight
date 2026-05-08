@@ -227,6 +227,17 @@ class Hamper(models.Model):
                 return ""
         return ""
 
+    @property
+    def gallery_image_url(self):
+        """Return the first gallery image URL, falling back to the cover image."""
+        try:
+            first_image = self.images.first()
+            if first_image and first_image.image:
+                return first_image.image.url
+        except Exception:
+            pass
+        return self.cover_image_url
+
 # Connect the m2m_changed handler now that `Hamper` is defined.
 m2m_changed.connect(ensure_parent_categories, sender=Hamper.categories.through)
 
@@ -291,3 +302,35 @@ class CorporateInquiry(models.Model):
 
     def __str__(self):
         return f"{self.company_name} - {self.contact_person}"
+
+
+class Favorite(models.Model):
+    """Track user favorite products (hampers) using session or user auth."""
+    session_key = models.CharField(max_length=40, null=True, blank=True, db_index=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='favorites'
+    )
+    hamper = models.ForeignKey(
+        Hamper,
+        on_delete=models.CASCADE,
+        related_name='favorited_by'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "favorites"
+        ordering = ["-created_at"]
+        unique_together = [['session_key', 'hamper'], ['user', 'hamper']]
+        indexes = [
+            models.Index(fields=['session_key', '-created_at']),
+            models.Index(fields=['user', '-created_at']),
+        ]
+
+    def __str__(self):
+        if self.user:
+            return f"{self.user.username} favorited {self.hamper.name}"
+        return f"Session {self.session_key} favorited {self.hamper.name}"

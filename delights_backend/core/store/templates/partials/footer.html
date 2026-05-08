@@ -1,0 +1,95 @@
+<!-- ═══════════════════════════════════════════
+     FOOTER
+     FIX: Unified city = "Pune, India" everywhere.
+     FIX: Removed "Pan-India Delivery" — replaced with "Bulk Gifting Specialists"
+════════════════════════════════════════════ -->
+<footer class="w-full mt-auto" style="background:#0f0304;color:#e8d5d5;">
+
+  <div class="w-full mx-auto px-3 md:px-6 pt-14 pb-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12">
+
+      <!-- Brand column -->
+      <div class="lg:col-span-2 flex flex-col gap-5">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#af101a;flex-shrink:0;"></div>
+          <span style="font-family:'Noto Serif',serif;font-style:italic;font-size:1.3rem;font-weight:700;color:#fff;letter-spacing:-0.01em;">WrappDelights</span>
+        </div>
+        <p style="font-size:13px;color:#a08080;line-height:1.7;max-width:300px;">
+          Premium curated gifting for weddings, corporate milestones, and every occasion in between. Proudly based in Pune.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="tel:{{ phone_number_raw|default:'+919309810348' }}"
+             style="display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#c49090;text-decoration:none;transition:color .2s;"
+             onmouseover="this.style.color='#ff9090'" onmouseout="this.style.color='#c49090'">
+            <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">call</span>
+            {{ phone_number|default:'+91 93098 10348' }}
+          </a>
+          <a href="mailto:sales@wrappdelights.com"
+             style="display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#c49090;text-decoration:none;transition:color .2s;"
+             onmouseover="this.style.color='#ff9090'" onmouseout="this.style.color='#c49090'">
+            <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">mail</span>
+            sales@wrappdelights.com
+          </a>
+          <a href="https://wa.me/{{ whatsapp_number|default:'919309810348' }}?text=Hi%2C%20I%27d%20like%20to%20explore%20bulk%20gifting."
+             target="_blank" rel="noopener"
+             style="display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#c49090;text-decoration:none;transition:color .2s;"
+             onmouseover="this.style.color='#25D366'" onmouseout="this.style.color='#c49090'">
+            <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">chat</span>
+            WhatsApp Us
+          </a>
+        </div>
+        <div style="display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(175,16,26,.3);border-radius:999px;padding:5px 12px;width:fit-content;">
+          <span class="material-symbols-outlined" style="font-size:13px;color:#af101a;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">location_on</span>
+          <span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a08080;">Pune, India</span>
+        </div>
+      </div>
+
+      <!-- Catalog -->
+      <div class="flex flex-col gap-4">
+        <h5 style="font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#7a5a5a;margin-bottom:2px;">Catalog</h5>
+        {% for cat in categories|slice:":5" %}
+          <a href="{% url 'products' %}?category={{ cat.slug }}"
+             style="font-size:13px;color:#a08080;text-decoration:none;transition:color .2s;"
+             onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">
+            {{ cat.name }}
+          </a>
+        {% empty %}
+          <a href="{% url 'products' %}"
+             style="font-size:13px;color:#a08080;text-decoration:none;"
+             onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">Browse All</a>
+        {% endfor %}
+      </div>
+
+      <!-- Gifting -->
+      <div class="flex flex-col gap-4">
+        <h5 style="font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#7a5a5a;margin-bottom:2px;">Gifting</h5>
+        <a href="{% url 'custom_hamper' %}" style="font-size:13px;color:#a08080;text-decoration:none;" onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">Build Custom Hamper</a>
+        <a href="{% url 'products' %}?category=wedding" style="font-size:13px;color:#a08080;text-decoration:none;" onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">Wedding Gifts</a>
+        <a href="{% url 'products' %}?category=corporate" style="font-size:13px;color:#a08080;text-decoration:none;" onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">Corporate Gifting</a>
+        <a href="{% url 'products' %}?category=employee" style="font-size:13px;color:#a08080;text-decoration:none;" onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">Employee Kits</a>
+      </div>
+
+      <!-- Company -->
+      <div class="flex flex-col gap-4">
+        <h5 style="font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#7a5a5a;margin-bottom:2px;">Company</h5>
+        <a href="{% url 'home' %}" style="font-size:13px;color:#a08080;text-decoration:none;" onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">About Us</a>
+        <a href="#" style="font-size:13px;color:#a08080;text-decoration:none;" onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">Case Studies</a>
+        <a href="#" style="font-size:13px;color:#a08080;text-decoration:none;" onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">Privacy Policy</a>
+        <a href="#" style="font-size:13px;color:#a08080;text-decoration:none;" onmouseover="this.style.color='#ffb3ac'" onmouseout="this.style.color='#a08080'">Terms of Service</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div style="border-top:1px solid rgba(175,16,26,.18);padding:16px 0;">
+    <div class="w-full mx-auto px-3 md:px-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+      <span style="font-size:11px;color:#5a3a3a;">© {% now "Y" %} WrappDelights. All rights reserved. — Premium B2B Gifting, Pune.</span>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div style="width:5px;height:5px;border-radius:50%;background:#af101a;opacity:.5;"></div>
+        <span style="font-size:11px;color:#5a3a3a;font-family:'Noto Serif',serif;font-style:italic;">Curated with love.</span>
+      </div>
+    </div>
+  </div>
+
+</footer>

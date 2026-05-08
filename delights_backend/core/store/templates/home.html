@@ -1,1139 +1,2326 @@
-{% extends "base.html" %}
-{% block title %}WrappDelights | Curated Gifts, Made Effortless{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block extra_css %}
-<style>
-  /* ─── Section spacing system ───
-     All page sections use this rhythm: py-16 md:py-24
-     Exception: tight accent strips (value strip, stats) use py-12
-     This eliminates the old inconsistency (py-8 / py-10 / py-16 mix)
-  ─── */
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WrappDelights | Curated Gifts, Made Effortless</title>
+  <link rel="icon" type="image/svg+xml"
+    href="https://cdn.jsdelivr.net/gh/Aditya-bachhav/WrappDelights@main/delights_backend/core/media/logo.svg" />
 
-  .home-fit-image {
-    width: 100%; height: 100%;
-    display: block;
-    object-fit: cover;
-    object-position: center;
-  }
+  <!-- Fonts & Icons -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Manrope:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
 
-  /* ─── Hero ─── */
-  .hero-section {
-    position: relative;
-    min-height: 72vh;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    background: #fdf7f6;
-  }
-  .hero-bg-pattern {
-    position: absolute; inset: 0; z-index: 0;
-    background-image:
-      radial-gradient(circle at 70% 20%, rgba(175,16,26,0.06) 0%, transparent 55%),
-      radial-gradient(circle at 10% 80%, rgba(84,96,103,0.07) 0%, transparent 50%);
-  }
-  .hero-texture {
-    position: absolute; inset: 0; z-index: 0; opacity: 0.018;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  }
-  .hero-ambient {
-    position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  }
-  .hero-ambient-icon {
-    position: absolute;
-    color: rgba(175,16,26,0.18);
-    animation: floaty 6s ease-in-out infinite;
-  }
-  .hero-ambient-icon.soft {
-    color: rgba(84,96,103,0.18);
-  }
-  .hero-ambient-icon.small { font-size: 16px; }
-  .hero-ambient-icon.medium { font-size: 22px; }
-  .hero-ambient-icon.large { font-size: 28px; }
-  @keyframes floaty {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-  }
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#af101a",
+            "primary-fixed": "#ffdad6",
+            "primary-fixed-dim": "#ffb3ac",
+            "on-primary": "#ffffff",
+            "on-primary-fixed": "#410003",
+            "on-primary-fixed-variant": "#930010",
+            "inverse-primary": "#ffb3ac",
+            "secondary": "#546067",
+            "on-secondary": "#ffffff",
+            "secondary-container": "#d7e4ec",
+            "on-secondary-container": "#5a666d",
+            "tertiary": "#005f7b",
+            "on-tertiary": "#ffffff",
+            "background": "#f9f9f9",
+            "surface": "#f9f9f9",
+            "surface-container": "#eeeeee",
+            "surface-container-low": "#f3f3f3",
+            "surface-container-high": "#e8e8e8",
+            "surface-variant": "#e2e2e2",
+            "outline": "#8f6f6c",
+            "outline-variant": "#e4beba",
+            "on-surface": "#1a1c1c",
+            "on-surface-variant": "#5b403d",
+            "error": "#c13515",
+          },
+          fontFamily: {
+            headline: ["Noto Serif", "serif"],
+            body: ["Manrope", "sans-serif"],
+          },
+        },
+      },
+    };
+  </script>
 
-  .hero-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 18px;
-  }
-  .hero-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border-radius: 999px;
-    background: #fff;
-    border: 1px solid #efdddd;
-    color: #3d2020;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    box-shadow: 0 8px 18px rgba(175,16,26,0.06);
-  }
-  .hero-chip .material-symbols-outlined {
-    font-size: 16px;
-    color: #af101a;
-  }
+  <style>
+    /* ─── Material Symbols ─── */
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+    }
 
-  .hero-img-wrapper { position: relative; z-index: 2; }
-  .hero-img-frame {
-    position: relative;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 40px 80px rgba(128,1,31,0.14), 0 0 0 1px rgba(228,190,186,0.4);
-    transform: rotate(-1.5deg);
-    transition: transform 0.7s cubic-bezier(.2,.8,.3,1);
-  }
-  .hero-img-frame:hover { transform: rotate(0deg); }
-  .hero-img-frame img {
-    display: block;
-    width: 100%;
-    aspect-ratio: 4/5;
-    object-fit: cover;
-    transition: transform 0.8s ease;
-  }
-  .hero-img-frame:hover img { transform: scale(1.03); }
+    /* ─── Base ─── */
+    body {
+      font-family: 'Manrope', sans-serif;
+      background-color: #fdfbfb;
+      background-image: url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23af101a' stroke-width='1.5' stroke-opacity='0.12'%3E%3Cg transform='translate(50, 50) rotate(15)'%3E%3Cpath d='M-10,-10 h20 v20 h-20 z M0,-10 v20 M-10,-2 h20'/%3E%3Cpath d='M0,-10 c-4,-5 -8,0 -2,3 c0,0 2,0 2,-3 z M0,-10 c4,-5 8,0 2,3 c0,0 -2,0 -2,-3 z'/%3E%3C/g%3E%3Cg transform='translate(180, 120) rotate(-20)'%3E%3Cpath d='M0,0 c-8,-6 -12,0 -4,4 l-10,12 M0,0 c8,-6 12,0 4,4 l10,12' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='0' cy='0' r='3' fill='%23af101a' fill-opacity='0.08' stroke='none'/%3E%3C/g%3E%3Cg transform='translate(320, 60) rotate(10) scale(0.8)'%3E%3Cpath d='M0,5 C-15,-10 -20,15 0,30 C20,15 15,-10 0,5 Z'/%3E%3C/g%3E%3Cg transform='translate(100, 250) rotate(-15) scale(0.9)'%3E%3Cpath d='M-10,-10 h20 v20 h-20 z M0,-10 v20 M-10,-2 h20'/%3E%3Cpath d='M0,-10 c-4,-5 -8,0 -2,3 c0,0 2,0 2,-3 z M0,-10 c4,-5 8,0 2,3 c0,0 -2,0 -2,-3 z'/%3E%3C/g%3E%3Cg transform='translate(250, 220) rotate(45)'%3E%3Cpath d='M0,-8 l2,6 6,2 -6,2 -2,6 -2,-6 -6,-2 6,-2 z' fill='%23af101a' fill-opacity='0.08' stroke='none'/%3E%3C/g%3E%3Cg transform='translate(60, 160) rotate(15) scale(0.7)'%3E%3Cpath d='M0,-8 l2,6 6,2 -6,2 -2,6 -2,-6 -6,-2 6,-2 z' fill='%23af101a' fill-opacity='0.08' stroke='none'/%3E%3C/g%3E%3Cg transform='translate(330, 310) rotate(25) scale(0.8)'%3E%3Cpath d='M0,0 c-8,-6 -12,0 -4,4 l-10,12 M0,0 c8,-6 12,0 4,4 l10,12' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='0' cy='0' r='3' fill='%23af101a' fill-opacity='0.08' stroke='none'/%3E%3C/g%3E%3Cg transform='translate(180, 360) rotate(-10) scale(0.6)'%3E%3Cpath d='M0,5 C-15,-10 -20,15 0,30 C20,15 15,-10 0,5 Z'/%3E%3C/g%3E%3Cg transform='translate(360, 180) rotate(-15) scale(0.5)'%3E%3Cpath d='M0,-8 l2,6 6,2 -6,2 -2,6 -2,-6 -6,-2 6,-2 z' fill='%23af101a' fill-opacity='0.08' stroke='none'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      background-size: 400px 400px;
+      color: #1a1c1c;
+      overflow-x: hidden;
+    }
 
-  .hero-line-accent {
-    position: absolute;
-    border-radius: 2px;
-    background: #af101a;
-    opacity: 0.15;
-  }
+    main {
+      width: 100%;
+    }
 
-  /* FIX: float badge uses "Pune" and no delivery language */
-  .hero-float-badge {
-    position: absolute;
-    bottom: -20px;
-    left: -24px;
-    background: #fff;
-    border: 1px solid #e4beba;
-    border-radius: 16px;
-    padding: 14px 20px;
-    box-shadow: 0 16px 40px rgba(128,1,31,0.10);
-    z-index: 5;
-    min-width: 190px;
-  }
-  /* FIX: removed "Since 2025" — now shows Pune badge with year founded */
-  .hero-float-tag {
-    position: absolute;
-    top: -18px;
-    right: -18px;
-    background: #af101a;
-    color: #fff;
-    border-radius: 50%;
-    width: 72px; height: 72px;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    font-family: 'Noto Serif', serif;
-    font-size: 10px;
-    font-weight: 700;
-    text-align: center;
-    line-height: 1.3;
-    box-shadow: 0 8px 24px rgba(175,16,26,0.3);
-    z-index: 6;
-  }
+    h1,
+    h2,
+    h3,
+    .font-sans-serif {
+      font-family: 'Noto Serif', serif;
+    }
 
-  .hero-slide { width: 100%; }
-  .hero-slide.hidden { display: none; }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
 
-  /* ─── Value Strip ─── */
-  .value-strip-marquee {
-    display: flex;
-    gap: 0;
-    animation: marquee 28s linear infinite;
-    white-space: nowrap;
-  }
-  @keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-  .value-strip-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 0 36px;
-    border-right: 1px solid rgba(255,255,255,0.15);
-    flex-shrink: 0;
-  }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
 
-  /* ─── Stats ─── */
-  .stat-card {
-    background: #fff;
-    border: 1px solid #efdddd;
-    border-radius: 16px;
-    padding: 24px 20px;
-    position: relative;
-    overflow: hidden;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-  }
-  .stat-card::before {
-    content: "";
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #af101a, #ffb3ac);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.4s ease;
-  }
-  .stat-card:hover { box-shadow: 0 12px 32px rgba(175,16,26,0.1); transform: translateY(-2px); }
-  .stat-card:hover::before { transform: scaleX(1); }
-  .stat-number {
-    font-family: 'Noto Serif', serif;
-    font-size: 2.2rem;
-    color: #af101a;
-    line-height: 1;
-    margin-top: 6px;
-  }
-  /* FIX: was 10px — bumped to 11px so it reads on mobile */
-  .stat-label {
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: #5b403d;
-  }
+    ::selection {
+      background: #80011f;
+      color: #fff;
+    }
 
-  /* ─── Section Headers ─── */
-  .section-kicker {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 10px;
-  }
-  .section-kicker-line {
-    width: 24px; height: 1px;
-    background: #af101a;
-    opacity: 0.5;
-  }
-  .section-kicker-text {
-    font-size: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.22em;
-    color: #af101a;
-  }
+    .wd-full-bleed {
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+    }
 
-  /* ─── Categories ─── */
-  .cat-pill {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 10px;
-    text-decoration: none;
-    transition: transform 0.25s ease;
-  }
-  .cat-pill:hover { transform: translateY(-4px); }
-  .cat-pill-img {
-    width: 84px; height: 84px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid #e4beba;
-    background: #fff8f7;
-    box-shadow: 0 4px 14px rgba(175,16,26,0.08);
-    display: flex; align-items: center; justify-content: center;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease;
-  }
-  .cat-pill:hover .cat-pill-img {
-    border-color: #af101a;
-    box-shadow: 0 8px 24px rgba(175,16,26,0.18);
-  }
-  .cat-pill-label {
-    font-size: 11px;
-    font-weight: 700;
-    color: #1a1c1c;
-    letter-spacing: 0.02em;
-    line-height: 1.3;
-    max-width: 80px;
-  }
+    /* WhatsApp Float */
+    .wa-float {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 9999;
+      background: #25D366;
+      color: #fff;
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: rgba(0, 0, 0, 0.02) 0 0 0 1px, rgba(0, 0, 0, 0.04) 0 2px 6px 0, rgba(0, 0, 0, 0.1) 0 4px 8px 0;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
-  /* ─── Collection Cards ─── */
-  .collection-card {
-    position: relative;
-    overflow: hidden;
-    border-radius: 20px;
-    background: #f0e8e8;
-    cursor: pointer;
-  }
-  .collection-card img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transition: transform 0.8s cubic-bezier(.25,.8,.25,1);
-  }
-  .collection-card:hover img { transform: scale(1.06); }
-  .collection-card-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(20,4,4,0.78) 0%, rgba(20,4,4,0.25) 45%, transparent 75%);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 32px;
-    transition: background 0.4s ease;
-  }
-  .collection-card:hover .collection-card-overlay {
-    background: linear-gradient(to top, rgba(20,4,4,0.88) 0%, rgba(20,4,4,0.3) 50%, transparent 78%);
-  }
-  .collection-card-arrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: #fff;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    border-bottom: 1px solid rgba(255,255,255,0.4);
-    padding-bottom: 2px;
-    width: fit-content;
-    transition: gap 0.25s ease;
-    text-decoration: none;
-  }
-  .collection-card:hover .collection-card-arrow { gap: 12px; }
+    .wa-float:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 14px 32px rgba(37, 211, 102, 0.5);
+    }
 
-  /* ─── Product Cards ─── */
-  .product-card {
-    background: #fff;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid rgba(228,190,186,0.4);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-  }
-  .product-card:hover {
-    border-color: rgba(175,16,26,0.25);
-    box-shadow: 0 16px 40px rgba(175,16,26,0.1);
-    transform: translateY(-3px);
-  }
-  .product-card-img {
-    position: relative;
-    overflow: hidden;
-    background: #fff8f7;
-  }
-  .product-card-img img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s ease;
-  }
-  .product-card:hover .product-card-img img { transform: scale(1.06); }
-  .product-card-quick {
-    position: absolute;
-    bottom: 12px; left: 12px; right: 12px;
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(6px);
-    border: 1px solid #e4beba;
-    border-radius: 10px;
-    padding: 10px;
-    text-align: center;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: #1a1c1c;
-    opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    text-decoration: none;
-  }
-  .product-card:hover .product-card-quick { opacity: 1; transform: translateY(0); }
+    /* ─── IMAGE CAROUSEL ─── */
+    .img-carousel {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background: #1a0a0b;
+      line-height: 0;
+    }
 
-  /* ─── CTA Dark Section ─── */
-  .cta-dark {
-    background: #160507;
-    position: relative;
-    overflow: hidden;
-    border-radius: 24px;
-  }
-  .cta-dark::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 30% 50%, rgba(175,16,26,0.22) 0%, transparent 65%);
-    pointer-events: none; /* FIX: was covering button clicks on some mobile viewports */
-  }
-  .cta-dark-img { position: relative; min-height: 360px; overflow: hidden; }
-  .cta-dark-img img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    filter: brightness(0.6) saturate(0.8);
-    transition: transform 1s ease, filter 1s ease;
-  }
-  .cta-dark:hover .cta-dark-img img { transform: scale(1.04); filter: brightness(0.7) saturate(0.9); }
-  .cta-dark-stat {
-    position: absolute;
-    bottom: 24px; right: 24px;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 14px;
-    padding: 16px 20px;
-    color: #fff;
-    text-align: right;
-  }
+    .img-carousel-track {
+      display: flex;
+      transition: transform 0.7s cubic-bezier(0.77, 0, 0.175, 1);
+      width: 100%;
+      will-change: transform;
+    }
 
-  /* ─── Occasion Cards ─── */
-  .occasion-card {
-    background: #fff;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid #efdddd;
-    display: flex;
-    flex-direction: column;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-  }
-  .occasion-card:hover { box-shadow: 0 16px 48px rgba(175,16,26,0.12); transform: translateY(-4px); }
-  .occasion-card-img { overflow: hidden; background: #f7ecee; }
-  .occasion-card-img img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s ease;
-  }
-  .occasion-card:hover .occasion-card-img img { transform: scale(1.05); }
+    .img-carousel-slide {
+      min-width: 100%;
+      height: 580px;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+    }
 
-  /* ─── How It Works ─── */
-  .how-step { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
-  .how-step-number {
-    font-family: 'Noto Serif', serif;
-    font-size: 2.8rem;
-    color: #af101a;
-    opacity: 0.12;
-    line-height: 1;
-    font-weight: 700;
-    user-select: none;
-  }
-  .how-step-icon {
-    width: 48px; height: 48px;
-    background: #fff8f7;
-    border: 1px solid #e4beba;
-    border-radius: 14px;
-    display: flex; align-items: center; justify-content: center;
-  }
+    @media (max-width: 768px) {
+      .img-carousel-slide {
+        height: 420px;
+      }
+    }
 
-  /* ─── Testimonials ─── */
-  .testimonial-card {
-    background: #fff;
-    border: 1px solid #efdddd;
-    border-radius: 20px;
-    padding: 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-    transition: box-shadow 0.3s ease;
-  }
-  .testimonial-card:hover { box-shadow: 0 12px 40px rgba(175,16,26,0.09); }
-  .testimonial-stars { color: #af101a; font-size: 13px; letter-spacing: 2px; }
-  .testimonial-quote {
-    font-family: 'Noto Serif', serif;
-    font-style: italic;
-    font-size: 15px;
-    color: #1a1c1c;
-    line-height: 1.65;
-  }
-  .testimonial-author {
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #5b403d;
-  }
+    @media (max-width: 480px) {
+      .img-carousel-slide {
+        height: 320px;
+      }
+    }
 
-  /* ─── Corporate CTA Banner ─── */
-  .corp-banner {
-    background: linear-gradient(135deg, #fff8f7 0%, #fce8e8 100%);
-    border: 1px solid #e4beba;
-    border-radius: 20px;
-    overflow: hidden;
-    position: relative;
-  }
-  /* FIX: z-index layering so radial never sits above buttons */
-  .corp-banner::after {
-    content: "";
-    position: absolute;
-    right: -40px; top: -40px;
-    width: 220px; height: 220px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(175,16,26,0.08), transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
-  .corp-banner > * { position: relative; z-index: 1; }
+    .img-carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      display: block;
+      transition: transform 7s ease;
+    }
 
-  /* ─── Entrance animations ─── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(28px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
-  .anim-fade-up   { animation: fadeUp 0.7s cubic-bezier(.2,.8,.3,1) both; }
-  .anim-fade-in   { animation: fadeIn 0.6s ease both; }
-  .delay-100 { animation-delay: 0.1s; }
-  .delay-200 { animation-delay: 0.2s; }
-  .delay-300 { animation-delay: 0.3s; }
-  .delay-400 { animation-delay: 0.4s; }
-  .delay-500 { animation-delay: 0.5s; }
+    .img-carousel-slide.is-active img {
+      transform: scale(1.04);
+    }
 
-  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
-  .reveal.visible { opacity: 1; transform: none; }
-</style>
-{% endblock %}
+    /* Gradient overlay — bottom heavy for caption legibility */
+    .img-carousel-slide::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom,
+          rgba(15, 3, 4, 0.08) 0%,
+          rgba(15, 3, 4, 0.15) 40%,
+          rgba(15, 3, 4, 0.62) 100%);
+      pointer-events: none;
+    }
 
-{% block content %}
-<div class="pt-[64px]">
+    .slide-caption {
+      position: absolute;
+      bottom: 44px;
+      left: 56px;
+      z-index: 2;
+      color: #fff;
+      max-width: 560px;
+    }
+
+    .slide-caption-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 4px 10px;
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
+      background: rgba(255, 255, 255, 0.06);
+      width: fit-content;
+    }
+
+    .slide-caption-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.18;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+      margin-bottom: 14px;
+    }
+
+    .slide-caption-sub {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 500;
+      line-height: 1.6;
+      margin-bottom: 24px;
+      max-width: 420px;
+    }
+
+    .slide-caption-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 26px;
+      background: #af101a;
+      color: #fff;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s ease, transform 0.15s ease;
+      box-shadow: rgba(0, 0, 0, 0.02) 0 0 0 1px, rgba(0, 0, 0, 0.04) 0 2px 6px 0, rgba(0, 0, 0, 0.1) 0 4px 8px 0;
+    }
+
+    .slide-caption-btn:hover {
+      background: #930010;
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 480px) {
+      .slide-caption {
+        left: 20px;
+        bottom: 24px;
+      }
+
+      .slide-caption-sub {
+        display: none;
+      }
+    }
+
+    .carousel-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+      font-size: 20px;
+    }
+
+    .carousel-arrow:hover {
+      background: #af101a;
+      border-color: #af101a;
+    }
+
+    .carousel-arrow.prev {
+      left: 20px;
+    }
+
+    .carousel-arrow.next {
+      right: 20px;
+    }
+
+    @media (max-width: 480px) {
+      .carousel-arrow {
+        width: 36px;
+        height: 36px;
+      }
+
+      .carousel-arrow.prev {
+        left: 10px;
+      }
+
+      .carousel-arrow.next {
+        right: 10px;
+      }
+    }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: 22px;
+      right: 36px;
+      z-index: 10;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .carousel-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.35);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      padding: 0;
+    }
+
+    .carousel-dot.active {
+      width: 22px;
+      border-radius: 3px;
+      background: #fff;
+    }
+
+    /* Marquee */
+    .marquee-strip {
+      width: 100%;
+      background: #af101a;
+      padding: 13px 0;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 0;
+      animation: marquee-run 32s linear infinite;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .marquee-track:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes marquee-run {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .marquee-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 36px;
+      flex-shrink: 0;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .marquee-item .material-symbols-outlined {
+      font-size: 13px;
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      color: rgba(255, 255, 255, 0.6);
+      flex-shrink: 0;
+    }
+
+    .marquee-sep {
+      display: inline-flex;
+      align-items: center;
+      color: rgba(255, 255, 255, 0.2);
+      font-size: 16px;
+      padding: 0 2px;
+      flex-shrink: 0;
+    }
+
+    /* Perfect Picks */
+    .perfect-picks {
+      background: linear-gradient(135deg, #f7f7f7 0%, #f7f7f7 100%);
+      padding: 56px 0;
+      text-align: center;
+      border-top: 2px solid #e8e8e8;
+      border-bottom: 2px solid #e8e8e8;
+    }
+
+    .perfect-picks-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: #af101a;
+      margin-bottom: 64px;
+      letter-spacing: -0.01em;
+    }
+
+    .perfect-picks-grid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      padding: 0 20px;
+    }
+
+    .perfect-pick-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      transition: transform 0.25s ease;
+    }
+
+    .perfect-pick-item:hover {
+      transform: translateY(-8px);
+    }
+
+    .perfect-pick-circle {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid rgba(175, 16, 26, 0.13);
+      background: #fff;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: rgba(0, 0, 0, 0.02) 0 0 0 1px, rgba(0, 0, 0, 0.04) 0 2px 6px 0, rgba(0, 0, 0, 0.1) 0 4px 8px 0;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      position: relative;
+    }
+
+    .perfect-pick-circle::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    .perfect-pick-item:hover .perfect-pick-circle {
+      border-color: #af101a;
+      background: #f7f7f7;
+      box-shadow: rgba(0, 0, 0, 0.02) 0 0 0 1px, rgba(0, 0, 0, 0.04) 0 2px 6px 0, rgba(0, 0, 0, 0.1) 0 4px 8px 0;
+    }
+
+    .perfect-pick-circle .material-symbols-outlined {
+      font-size: 64px;
+      color: #fff;
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      position: relative;
+      z-index: 2;
+    }
+
+    .perfect-pick-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: #222222;
+      letter-spacing: 0.03em;
+      max-width: 130px;
+      line-height: 1.4;
+    }
+
+    .perfect-pick-separator {
+      font-size: 18px;
+      color: rgba(175, 16, 26, 0.18);
+      font-weight: 300;
+    }
+
+    /* Category tabs */
+    .category-tab {
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: capitalize;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .category-tab.active,
+    .category-tab:hover {
+      background: #af101a;
+      color: #fff;
+    }
+
+    .category-tab:not(.active) {
+      background: rgba(175, 16, 26, 0.08);
+      color: #546067;
+    }
+
+    .category-tab:active {
+      transform: translateY(1px);
+    }
+
+    .category-carousel-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(175, 16, 26, 0.08);
+      border: 1px solid rgba(175, 16, 26, 0.18);
+      color: #af101a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .category-carousel-arrow:hover {
+      background: #af101a;
+      color: #fff;
+    }
+
+    .category-carousel-arrow.prev {
+      left: -24px;
+    }
+
+    .category-carousel-arrow.next {
+      right: -24px;
+    }
+
+    @media (min-width: 768px) {
+      .category-carousel-arrow.prev {
+        left: -34px;
+      }
+
+      .category-carousel-arrow.next {
+        right: -34px;
+      }
+    }
+
+    .category-product-card {
+      flex-shrink: 0;
+      width: 260px;
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(228, 190, 186, 0.4);
+      cursor: pointer;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    }
+    @media (min-width: 768px) {
+      .category-product-card {
+        width: 310px;
+      }
+    }
+
+    .category-product-card:hover {
+      border-color: rgba(175, 16, 26, 0.22);
+      box-shadow: 0 16px 40px rgba(175, 16, 26, 0.10);
+      transform: translateY(-3px);
+    }
+
+    .category-product-img {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      background: #f7f7f7;
+      overflow: hidden;
+      min-height: 280px;
+    }
+
+    .category-product-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .category-product-card:hover .category-product-img img {
+      transform: scale(1.05);
+    }
+
+    .category-product-wishlist {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.88);
+      border: none;
+      color: #af101a;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    .category-product-wishlist:hover,
+    .category-product-wishlist.favorited {
+      background: #af101a;
+      color: #fff;
+    }
+
+    .category-product-info {
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .category-product-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #222222;
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+
+    .category-product-category {
+      font-size: 11px;
+      color: #6a6a6a;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .category-product-price {
+      font-size: 15px;
+      font-weight: 700;
+      color: #af101a;
+      margin-top: auto;
+    }
+
+    /* Section helpers */
+    .section-kicker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .section-kicker-line {
+      width: 24px;
+      height: 1px;
+      background: #af101a;
+      opacity: 0.5;
+    }
+
+    .section-kicker-text {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: #af101a;
+    }
+
+    /* Collection cards */
+    .collection-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 14px;
+      background: #f9f9f9;
+      cursor: pointer;
+    }
+
+    .collection-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(.25, .8, .25, 1);
+    }
+
+    .collection-card:hover img {
+      transform: scale(1.06);
+    }
+
+    .collection-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(20, 4, 4, 0.78) 0%, rgba(20, 4, 4, 0.25) 45%, transparent 75%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 32px;
+      transition: background 0.4s ease;
+    }
+
+    .collection-card:hover .collection-card-overlay {
+      background: linear-gradient(to top, rgba(20, 4, 4, 0.88) 0%, rgba(20, 4, 4, 0.3) 50%, transparent 78%);
+    }
+
+    .collection-card-arrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+      padding-bottom: 2px;
+      width: fit-content;
+      transition: gap 0.25s ease;
+      text-decoration: none;
+    }
+
+    .collection-card:hover .collection-card-arrow {
+      gap: 12px;
+    }
+
+    /* Product card */
+    .product-card {
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(228, 190, 186, 0.4);
+      box-shadow: rgba(0, 0, 0, 0.02) 0 0 0 1px, rgba(0, 0, 0, 0.04) 0 2px 6px 0, rgba(0, 0, 0, 0.1) 0 4px 8px 0;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .product-card:hover {
+      border-color: rgba(175, 16, 26, 0.25);
+      box-shadow: rgba(0, 0, 0, 0.02) 0 0 0 1px, rgba(0, 0, 0, 0.04) 0 2px 6px 0, rgba(0, 0, 0, 0.1) 0 4px 8px 0;
+      transform: translateY(-3px);
+    }
+
+    .product-card-img {
+      position: relative;
+      overflow: hidden;
+      background: #f7f7f7;
+      min-height: 280px;
+    }
+
+    .product-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .product-card:hover .product-card-img img {
+      transform: scale(1.06);
+    }
+
+    .product-card-quick {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(6px);
+      border: 1px solid #dddddd;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #222222;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      text-decoration: none;
+    }
+
+    .product-card:hover .product-card-quick {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Testimonial */
+    .testimonial-card {
+      background: #fff;
+      border: 1px solid #dddddd;
+      border-radius: 18px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: rgba(0, 0, 0, 0.02) 0 0 0 1px, rgba(0, 0, 0, 0.04) 0 2px 6px 0, rgba(0, 0, 0, 0.1) 0 4px 8px 0;
+      transition: box-shadow 0.3s ease;
+      width: 280px;
+      flex-shrink: 0;
+      white-space: normal;
+    }
+    @media (min-width: 768px) {
+      .testimonial-card {
+        width: 360px;
+        padding: 36px;
+        gap: 18px;
+      }
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(-50% - 12px)); }
+    }
+    .animate-marquee {
+      display: flex;
+      width: max-content;
+      animation: marquee 40s linear infinite;
+    }
+    .animate-marquee:hover {
+      animation-play-state: paused;
+    }
+
+    .testimonial-card:hover {
+      box-shadow: rgba(0, 0, 0, 0.02) 0 0 0 1px, rgba(0, 0, 0, 0.04) 0 2px 6px 0, rgba(0, 0, 0, 0.1) 0 4px 8px 0;
+    }
+
+    .testimonial-stars {
+      color: #af101a;
+      font-size: 15px;
+      letter-spacing: 2.5px;
+    }
+
+    .testimonial-quote {
+      font-family: 'Manrope', sans-serif;
+      font-style: italic;
+      font-size: 16px;
+      color: #222222;
+      line-height: 1.7;
+    }
+
+    .testimonial-author {
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #6a6a6a;
+    }
+
+    /* Corp banner */
+    .corp-banner {
+      background: linear-gradient(135deg, #f7f7f7 0%, #f7f7f7 100%);
+      border: 1px solid #dddddd;
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .corp-banner::after {
+      content: "";
+      position: absolute;
+      right: -40px;
+      top: -40px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(175, 16, 26, 0.08), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .corp-banner>* {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Hover Accordion Carousel ── */
+    .accordion-wrapper {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .accordion-carousel {
+      display: flex;
+      gap: 12px;
+      height: 500px;
+      width: 100%;
+    }
+
+    .accordion-card {
+      position: relative;
+      flex: 1;
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      text-decoration: none;
+      transition: flex 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.5s ease;
+      background: #160507;
+    }
+
+    .accordion-card:hover {
+      flex: 4;
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(175, 16, 26, 0.15);
+    }
+
+    .accordion-card img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.6) saturate(0.8);
+      transition: filter 0.7s ease, transform 0.7s ease;
+    }
+
+    .accordion-card:hover img {
+      filter: brightness(0.9) saturate(1.05);
+      transform: scale(1.05);
+    }
+
+    .accordion-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 60%);
+      opacity: 0.8;
+      transition: opacity 0.5s ease;
+    }
+
+    .accordion-card:hover::after {
+      opacity: 0.95;
+    }
+
+    .accordion-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 24px;
+      color: white;
+      transform: translateY(30px);
+      transition: transform 0.5s ease 0.1s;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-end;
+      height: 100%;
+      z-index: 10;
+    }
+
+    .accordion-card:hover .accordion-content {
+      transform: translateY(0);
+    }
+
+    .accordion-title {
+      font-size: 1.5rem;
+      font-family: 'Noto Serif', serif;
+      font-weight: bold;
+      margin-bottom: 8px;
+      white-space: nowrap;
+      transition: color 0.3s ease;
+    }
+
+    .accordion-card:hover .accordion-title {
+      color: #ffb3ac;
+    }
+
+    .accordion-desc {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.8);
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.4s ease 0.2s, max-height 0.4s ease 0.2s;
+    }
+
+    .accordion-card:hover .accordion-desc {
+      opacity: 1;
+      max-height: 100px;
+      margin-bottom: 8px;
+    }
+
+    .accordion-num {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      color: white;
+      backdrop-filter: blur(4px);
+      z-index: 10;
+      transition: border-color 0.3s ease;
+    }
+
+    .accordion-card:hover .accordion-num {
+      border-color: #ffb3ac;
+      color: #ffb3ac;
+    }
+
+    .accordion-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      transition: opacity 0.4s ease;
+      z-index: 10;
+    }
+
+    .accordion-card:hover .accordion-icon {
+      opacity: 0;
+    }
+
+    @media (max-width: 768px) {
+      .accordion-carousel {
+        flex-direction: column;
+        height: 700px;
+      }
+
+      .accordion-title {
+        white-space: normal;
+      }
+    }
+
+    /* Animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    .home-fit-image {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    /* Wd-badge */
+    .wd-badge {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 3px 8px;
+      border-radius: 2px;
+    }
+
+    .wd-badge-primary {
+      border: 1px solid #930010;
+      color: #930010;
+    }
+
+    /* Empty state */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      color: #6a6a6a;
+      text-align: center;
+      width: 100%;
+    }
+
+    .empty-state .material-symbols-outlined {
+      font-size: 48px;
+      color: #dddddd;
+      margin-bottom: 12px;
+    }
+
+    .empty-state p {
+      font-size: 14px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col bg-surface text-on-surface"
+  data-favorite-ids="{{ favorite_product_ids|join:',' }}" data-favorites-count="{{ favorites_count|default:0 }}">
+
+  <!-- Include consistent navbar across all pages -->
+  {% include 'partials/navbar.html' %}
 
   <!-- ═══════════════════════════════════════════
-       HERO
-  ════════════════════════════════════════════ -->
-  <section class="hero-section px-6 md:px-12 lg:px-20 py-12 md:py-16">
-    <div class="hero-bg-pattern"></div>
-    <div class="hero-texture"></div>
-    <div class="hero-ambient" aria-hidden="true">
-      <span class="material-symbols-outlined hero-ambient-icon small" style="top:12%;left:6%;">redeem</span>
-      <span class="material-symbols-outlined hero-ambient-icon medium soft" style="top:18%;right:12%;animation-delay:1s;">auto_awesome</span>
-      <span class="material-symbols-outlined hero-ambient-icon large" style="bottom:16%;left:38%;animation-delay:2s;">favorite</span>
-    </div>
+     PAGE CONTENT
+════════════════════════════════════════════ -->
+  <main class="flex-1">
 
-    <div class="relative z-10 grid md:grid-cols-2 gap-12 lg:gap-20 items-center w-full max-w-7xl mx-auto">
+    <!-- ── IMAGE CAROUSEL ──────────────────────────────────────────────────────── -->
+    <!--
+  Slide images rationale:
+  1. Gift hamper flatlay — establishes what WrappDelights sells immediately
+  2. Corporate gifting scene — targets B2B visitors (stated primary audience)
+  3. Wedding favour/return gift arrangement — wedding is a key category
+  4. Employee welcome kit / onboarding bag — another core category
+  5. Diwali / festive gifting — relevant to Indian market, corporate season
 
-      <!-- Copy -->
-      <div class="order-2 md:order-1">
-        <div class="section-kicker anim-fade-up">
-          <div class="section-kicker-line"></div>
-          <span class="section-kicker-text">The Art of Gifting</span>
-        </div>
+  All images are from Unsplash/Pexels with proper licensing for commercial use.
+  Object-position tuned per slide so the subject is always centred.
+-->
+    <section class="img-carousel" aria-label="Product showcase carousel">
+      <div class="img-carousel-track" id="imgCarouselTrack">
 
-        <h1 class="text-[2.6rem] sm:text-5xl md:text-[3.6rem] lg:text-[4rem] font-serif leading-[1.08] mb-6 text-on-surface anim-fade-up delay-100">
-          Gifts That<br>
-          <em class="text-primary not-italic">Tell a Story</em>
-        </h1>
-
-        <p class="text-base md:text-lg text-secondary max-w-md mb-8 leading-relaxed font-body anim-fade-up delay-200">
-          Premium curated hampers for weddings, corporate milestones, and every occasion in between. Beautifully wrapped, personally presented — Pune's boutique gifting studio.
-        </p>
-
-        <div class="hero-chips anim-fade-up delay-250">
-          <span class="hero-chip"><span class="material-symbols-outlined">celebration</span> Occasion-ready</span>
-          <span class="hero-chip"><span class="material-symbols-outlined">redeem</span> Handpicked</span>
-          <span class="hero-chip"><span class="material-symbols-outlined">local_shipping</span> Pune studio</span>
-        </div>
-
-        <!-- Trust row -->
-        <div class="flex items-center gap-5 mb-10 anim-fade-up delay-300">
-          <div class="flex -space-x-2">
-            <img src="https://i.pravatar.cc/36?img=47" alt="" class="w-9 h-9 rounded-full border-2 border-white object-cover">
-            <img src="https://i.pravatar.cc/36?img=12" alt="" class="w-9 h-9 rounded-full border-2 border-white object-cover">
-            <img src="https://i.pravatar.cc/36?img=32" alt="" class="w-9 h-9 rounded-full border-2 border-white object-cover">
-          </div>
-          <div>
-            <div class="text-[#af101a] text-sm font-bold tracking-tight">★★★★★</div>
-            <div class="text-[11px] text-secondary font-semibold">1,200+ happy clients</div>
-          </div>
-        </div>
-
-        <div class="flex flex-col sm:flex-row gap-3 anim-fade-up delay-400">
-          <a href="{% url 'custom_hamper' %}"
-             class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-on-primary rounded-xl font-bold text-sm tracking-wide hover:bg-on-primary-fixed-variant transition-all active:scale-95 shadow-lg shadow-primary/25">
-            <span class="material-symbols-outlined text-[18px]">favorite</span>
-            Build Custom Hamper
-          </a>
-          <a href="{% url 'products' %}"
-             class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white border-2 border-outline-variant text-on-surface rounded-xl font-bold text-sm tracking-wide hover:border-primary hover:text-primary transition-all active:scale-95">
-            <span class="material-symbols-outlined text-[18px]">auto_awesome</span>
-            Browse Catalog
-          </a>
-        </div>
-
-        <!-- Slideshow dots -->
-        <div class="mt-10 flex items-center gap-3 anim-fade-up delay-500" id="heroDots">
-          <button data-hero-dot="0" class="h-[3px] w-10 rounded-full bg-primary transition-all duration-300" aria-label="Slide 1"></button>
-          <button data-hero-dot="1" class="h-[3px] w-5 rounded-full bg-outline-variant transition-all duration-300" aria-label="Slide 2"></button>
-          <button data-hero-dot="2" class="h-[3px] w-5 rounded-full bg-outline-variant transition-all duration-300" aria-label="Slide 3"></button>
-        </div>
-      </div>
-
-      <!-- Image -->
-      <div class="hero-img-wrapper order-1 md:order-2 anim-fade-in delay-200">
-        <div class="hero-line-accent" style="width:2px;height:80px;right:24px;top:-20px;"></div>
-        <div class="hero-line-accent" style="width:60px;height:2px;right:24px;top:-20px;"></div>
-
-        <div class="hero-img-frame">
-          <div class="hero-slide" data-hero="0">
-            <img src="https://images.pexels.com/photos/18886885/pexels-photo-18886885.jpeg" alt="Curated hamper">
-          </div>
-          <div class="hero-slide hidden" data-hero="1">
-            <img src="https://images.pexels.com/photos/7764463/pexels-photo-7764463.jpeg" alt="Gift with greeting card">
-          </div>
-          <div class="hero-slide hidden" data-hero="2">
-            <img src="https://images.pexels.com/photos/34958125/pexels-photo-34958125.jpeg" alt="Premium wrap and ribbon">
-          </div>
-        </div>
-
-        <!-- FIX: removed "Pan-India Delivery" — honest copy about studio/pickup -->
-        <div class="hero-float-badge">
-          <p class="stat-label mb-1">Pune's Gifting Studio</p>
-          <p class="text-base font-serif font-bold text-on-surface">5,000+ Hampers Curated</p>
-        </div>
-
-        <!-- FIX: "Since 2025" matches the marketing copy in value strip -->
-        <div class="hero-float-tag">
-          <span style="font-size:9px;letter-spacing:.06em;text-transform:uppercase;opacity:.75;">Est.</span>
-          <span style="font-size:16px;font-weight:900;line-height:1;">2025</span>
-          <span style="font-size:8px;letter-spacing:.06em;text-transform:uppercase;opacity:.75;">Pune</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ═══════════════════════════════════════════
-       VALUE STRIP
-       FIX: removed "Pan-India Delivery" — replaced with honest B2B USPs
-  ════════════════════════════════════════════ -->
-  <div class="bg-primary overflow-hidden py-4 select-none" aria-hidden="true">
-    <div class="value-strip-marquee text-on-primary text-[11px] font-bold tracking-[0.18em] uppercase">
-      {% for _ in "xxxxxxxx" %}
-      <span class="value-strip-item">
-        <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">verified</span>
-        Custom branding available
-      </span>
-      <span class="value-strip-item">
-        <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">support_agent</span>
-        Dedicated bulk gifting support
-      </span>
-      <span class="value-strip-item">
-        <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">inventory_2</span>
-        500+ curated products
-      </span>
-      <span class="value-strip-item">
-        <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">groups</span>
-        B2B bulk orders welcome
-      </span>
-      {% endfor %}
-    </div>
-  </div>
-
-
-  <!-- ═══════════════════════════════════════════
-       STATS
-       FIX: unified py-12 with surrounding context.
-       FIX: removed "Cities Served / Pan-India delivery" — changed to relevant stat.
-       FIX: stat-label bumped to 11px for mobile.
-  ════════════════════════════════════════════ -->
-  <section class="bg-[#fff8f7] border-b border-[#f0dcdc] py-12">
-    <div class="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-2 md:grid-cols-4 gap-4 reveal">
-      <div class="stat-card">
-        <p class="stat-label">Gift Options</p>
-        <p class="stat-number">500+</p>
-        <p class="text-xs text-secondary mt-2">Handpicked products</p>
-      </div>
-      <div class="stat-card">
-        <p class="stat-label">Happy Clients</p>
-        <p class="stat-number">1,200+</p>
-        <p class="text-xs text-secondary mt-2">Corporate & weddings</p>
-      </div>
-      <div class="stat-card">
-        <p class="stat-label">Hampers Curated</p>
-        <p class="stat-number">5,000+</p>
-        <p class="text-xs text-secondary mt-2">Since 2019</p>
-      </div>
-      <div class="stat-card">
-        <p class="stat-label">Repeat Orders</p>
-        <p class="stat-number">72%</p>
-        <p class="text-xs text-secondary mt-2">Clients who reorder</p>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ═══════════════════════════════════════════
-       QUICK NAVIGATION BY CATEGORY (HIERARCHICAL)
-  ════════════════════════════════════════════ -->
-  {% if top_level_categories %}
-  <section class="py-16 md:py-24 bg-gradient-to-b from-surface to-[#fdf7f6]">
-    <div class="max-w-7xl mx-auto px-6 md:px-12">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal">
-        {% for category in top_level_categories %}
-        <div class="group">
-          <a href="{% url 'products' %}?category={{ category.slug }}"
-             class="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white font-bold uppercase tracking-widest text-[11px] rounded-full hover:bg-on-primary-fixed-variant transition-all mb-4 shadow-sm">
-            <span class="material-symbols-outlined text-sm">redeem</span>
-            {{ category.name }}
-            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-          </a>
-          <div class="bg-white rounded-2xl border border-[#efdddd] p-6 space-y-3">
-            {% for child in category.children.all %}
-            <a href="{% url 'products' %}?category={{ child.slug %}"
-               class="flex items-start gap-3 group/item">
-              <span class="material-symbols-outlined text-lg text-primary flex-shrink-0 mt-0.5" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">favorite</span>
-              <span class="block text-secondary text-sm font-medium group-hover/item:text-primary transition-colors">{{ child.name }}</span>
+        <!-- Slide 1 · Hero — luxury gift hamper flatlay -->
+        <div class="img-carousel-slide is-active" role="img" aria-label="Luxury curated gift hampers">
+          <img
+            src="https://images.unsplash.com/photo-1608755728617-aefab37d2edd?q=90&w=2560&auto=format&fit=crop&ixlib=rb-4.1.0"
+            alt="Luxury curated gift hampers" loading="eager" fetchpriority="high" style="object-position: center 30%;">
+          <div class="slide-caption">
+            <p class="slide-caption-tag">
+              <span class="material-symbols-outlined"
+                style="font-size:11px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;color:rgba(255,255,255,0.55);">auto_awesome</span>
+              Signature Collection
+            </p>
+            <h2 class="slide-caption-title">Luxury Hampers,<br>Thoughtfully Curated</h2>
+            <p class="slide-caption-sub">500+ handpicked products. Every hamper packed with premium care.</p>
+            <a href="{% url 'products' %}" class="slide-caption-btn">
+              Explore All Gifts
+              <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span>
             </a>
+          </div>
+        </div>
+
+        <!-- Slide 2 · Corporate gifting — office gifting scene -->
+        <div class="img-carousel-slide" role="img" aria-label="Corporate gift boxes for teams and clients">
+          <img
+            src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=2560&h=1400&q=90"
+            alt="Corporate gift boxes neatly wrapped" loading="lazy" style="object-position: center center;">
+          <div class="slide-caption">
+            <p class="slide-caption-tag">
+              <span class="material-symbols-outlined"
+                style="font-size:11px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;color:rgba(255,255,255,0.55);">business_center</span>
+              Corporate Gifting
+            </p>
+            <h2 class="slide-caption-title">Impress Every<br>Team &amp; Client</h2>
+            <p class="slide-caption-sub">Bulk corporate orders with custom branding. Quote within 24 hours.</p>
+            <a href="{% url 'products' %}?category=corporate" class="slide-caption-btn">
+              View Corporate Gifts
+              <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Slide 3 · Wedding — elegant wedding favour arrangement -->
+        <div class="img-carousel-slide" role="img" aria-label="Elegant wedding return gifts and hampers">
+          <img
+            src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=2560&h=1400&q=90"
+            alt="Wedding return gift arrangement" loading="lazy" style="object-position: center 40%;">
+          <div class="slide-caption">
+            <p class="slide-caption-tag">
+              <span class="material-symbols-outlined"
+                style="font-size:11px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;color:rgba(255,255,255,0.55);">favorite</span>
+              Wedding Collection
+            </p>
+            <h2 class="slide-caption-title">Gifts That Make<br>Every Moment Special</h2>
+            <p class="slide-caption-sub">Wedding hampers, return gifts, and accessories — all in one place.</p>
+            <a href="{% url 'products' %}?category=wedding" class="slide-caption-btn">
+              Shop Wedding Gifts
+              <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Slide 4 · Employee welcome kit — onboarding bag on a desk -->
+        <div class="img-carousel-slide" role="img" aria-label="Employee welcome kit and onboarding gifts">
+          <img
+            src="https://images.pexels.com/photos/5486837/pexels-photo-5486837.jpeg?auto=compress&cs=tinysrgb&w=2560&h=1400&fit=crop"
+            alt="Employee welcome kit" loading="lazy" style="object-position: center 35%;">
+          <div class="slide-caption">
+            <p class="slide-caption-tag">
+              <span class="material-symbols-outlined"
+                style="font-size:11px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;color:rgba(255,255,255,0.55);">badge</span>
+              Employee Gifting
+            </p>
+            <h2 class="slide-caption-title">Welcome Kits That<br>Leave a Lasting Mark</h2>
+            <p class="slide-caption-sub">Make every new hire feel valued from day one.</p>
+            <a href="{% url 'products' %}?category=employee-welcome-kit" class="slide-caption-btn">
+              Explore Welcome Kits
+              <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Slide 5 · Build your own — custom hamper builder CTA -->
+        <div class="img-carousel-slide" role="img" aria-label="Build your own custom gift hamper">
+          <img
+            src="https://images.pexels.com/photos/6833311/pexels-photo-6833311.jpeg?auto=compress&cs=tinysrgb&w=2560&h=1400&fit=crop"
+            alt="Custom gift hamper being assembled" loading="lazy" style="object-position: center 50%;">
+          <div class="slide-caption">
+            <p class="slide-caption-tag">
+              <span class="material-symbols-outlined"
+                style="font-size:11px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;color:rgba(255,255,255,0.55);">auto_fix_high</span>
+              Personalization Studio
+            </p>
+            <h2 class="slide-caption-title">Build Your Own<br>Perfect Hamper</h2>
+            <p class="slide-caption-sub">Pick the box, mix-and-match products, add a heartfelt note.</p>
+            <a href="{% url 'custom_hamper' %}" class="slide-caption-btn">
+              Start Building
+              <span class="material-symbols-outlined" style="font-size:14px;">auto_fix_high</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <button class="carousel-arrow prev" id="imgPrev" aria-label="Previous slide">
+        <span class="material-symbols-outlined" style="font-size:20px;">chevron_left</span>
+      </button>
+      <button class="carousel-arrow next" id="imgNext" aria-label="Next slide">
+        <span class="material-symbols-outlined" style="font-size:20px;">chevron_right</span>
+      </button>
+      <div class="carousel-dots" id="imgDots" role="tablist" aria-label="Carousel navigation"></div>
+    </section>
+
+    <!-- ── MARQUEE STRIP ────────────────────────────────────────────────────────── -->
+    <div class="marquee-strip">
+      <div class="marquee-track" aria-hidden="true">
+        <span class="marquee-item"><span class="material-symbols-outlined">card_giftcard</span>Customizable
+          Hampers</span>
+        <span class="marquee-sep">·</span>
+        <span class="marquee-item"><span class="material-symbols-outlined">favorite</span>Handpicked Products</span>
+        <span class="marquee-sep">·</span>
+        <span class="marquee-item"><span class="material-symbols-outlined">business_center</span>Corporate Gifting
+          Solutions</span>
+        <span class="marquee-sep">·</span>
+        <span class="marquee-item"><span class="material-symbols-outlined">celebration</span>Perfect for Every
+          Occasion</span>
+        <span class="marquee-sep">·</span>
+        <span class="marquee-item"><span class="material-symbols-outlined">local_shipping</span>Nationwide
+          Delivery</span>
+        <span class="marquee-sep">·</span>
+        <span class="marquee-item"><span class="material-symbols-outlined">verified</span>Premium Quality Assured</span>
+        <span class="marquee-sep">·</span>
+        <!-- duplicate for seamless loop -->
+        <span class="marquee-item"><span class="material-symbols-outlined">card_giftcard</span>Customizable
+          Hampers</span>
+        <span class="marquee-sep">·</span>
+        <span class="marquee-item"><span class="material-symbols-outlined">favorite</span>Handpicked Products</span>
+        <span class="marquee-sep">·</span>
+        <span class="marquee-item"><span class="material-symbols-outlined">business_center</span>Corporate Gifting
+          Solutions</span>
+        <span class="marquee-sep">·</span>
+        <span class="marquee-item"><span class="material-symbols-outlined">celebration</span>Perfect for Every
+          Occasion</span>
+        <span class="marquee-sep">·</span>
+        <span class="marquee-item"><span class="material-symbols-outlined">local_shipping</span>Nationwide
+          Delivery</span>
+        <span class="marquee-sep">·</span>
+        <span class="marquee-item"><span class="material-symbols-outlined">verified</span>Premium Quality Assured</span>
+        <span class="marquee-sep">·</span>
+      </div>
+    </div>
+
+    <!-- ── PERFECT PICKS ─────────────────────────────────────────────────────────── -->
+    <section class="perfect-picks">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12">
+        <h2 class="perfect-picks-title">Perfect Picks for Every Occasion</h2>
+        <div class="perfect-picks-grid">
+
+          <a href="{% url 'products' %}?category=wedding" class="perfect-pick-item">
+            <div class="perfect-pick-circle"
+              style="background-image: url('https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');">
+              <span class="material-symbols-outlined">favorite</span>
+            </div>
+            <span class="perfect-pick-label">Wedding Gifts</span>
+          </a>
+          <span class="perfect-pick-separator">·</span>
+
+          <a href="{% url 'products' %}?category=employee-welcome-kit" class="perfect-pick-item">
+            <div class="perfect-pick-circle"
+              style="background-image: url('https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.0');">
+              <span class="material-symbols-outlined">work</span>
+            </div>
+            <span class="perfect-pick-label">Employee Welcome Kit</span>
+          </a>
+          <span class="perfect-pick-separator">·</span>
+
+          <a href="{% url 'custom_hamper' %}" class="perfect-pick-item">
+            <div class="perfect-pick-circle"
+              style="background-image: url('https://images.unsplash.com/photo-1657879005558-a5733d18d9e1?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');">
+              <span class="material-symbols-outlined">auto_fix_high</span>
+            </div>
+            <span class="perfect-pick-label">Build Your Own Hamper</span>
+          </a>
+          <span class="perfect-pick-separator">·</span>
+
+          <a href="{% url 'products' %}?category=corporate" class="perfect-pick-item">
+            <div class="perfect-pick-circle"
+              style="background-image: url('https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.0');">
+              <span class="material-symbols-outlined">business_center</span>
+            </div>
+            <span class="perfect-pick-label">Corporate Gifting</span>
+          </a>
+          <span class="perfect-pick-separator">·</span>
+
+          <a href="{% url 'products' %}?category=wedding-return-gifts" class="perfect-pick-item">
+            <div class="perfect-pick-circle"
+              style="background-image: url('https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.0');">
+              <span class="material-symbols-outlined">redeem</span>
+            </div>
+            <span class="perfect-pick-label">Wedding Return Gift</span>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PRODUCTS BY CATEGORY ───────────────────────────────────────────────── -->
+    <section class="py-16 md:py-24 border-b border-[#dddddd]">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12">
+        <div class="mb-12 reveal">
+          <h2 class="text-4xl md:text-5xl font-sans-serif text-center mb-8 text-on-surface">Most Loved Gift Hampers</h2>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="flex gap-3 overflow-x-auto no-scrollbar mb-12 pb-4 reveal justify-center flex-wrap">
+          {% for cat_name, products in ordered_products_by_category %}
+          <button class="category-tab {% if forloop.first %}active{% endif %}" data-category="{{ cat_name }}"
+            onclick="filterProductsByCategory(this)">
+            {{ cat_name }}
+          </button>
+          {% endfor %}
+        </div>
+
+        <!-- Products Carousel -->
+        <div class="relative reveal">
+          <button class="category-carousel-arrow prev" onclick="scrollCategoryCarousel(-1)" aria-label="Previous">
+            <span class="material-symbols-outlined">chevron_left</span>
+          </button>
+
+          <div id="categoryCarouselTrack" class="flex gap-6 overflow-x-auto no-scrollbar px-4 py-2">
+            {% for product in products_by_category.Hampers %}
+            <div class="category-product-card" data-category="Hampers" data-product-id="{{ product.id }}">
+              <div class="category-product-img group">
+                {% if product.cover_image_url %}
+                <img src="{{ product.cover_image_url }}" alt="{{ product.name }}" loading="lazy"
+                  class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0">
+                {% if product.gallery_image_url and product.gallery_image_url != product.cover_image_url %}
+                <img src="{{ product.gallery_image_url }}" alt="{{ product.name }}" loading="lazy"
+                  class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                {% endif %}
+                {% else %}
+                <div class="w-full h-full bg-[#f5f5f5] flex items-center justify-center" style="height:230px;">
+                  <span class="material-symbols-outlined text-4xl" style="color:#dddddd;">redeem</span>
+                </div>
+                {% endif %}
+                <button class="category-product-wishlist" aria-label="Add to wishlist"
+                  data-hamper-id="{{ product.id }}">
+                  <span class="material-symbols-outlined" style="font-size:16px;">favorite</span>
+                </button>
+              </div>
+              <div class="category-product-info">
+                <p class="category-product-name">{{ product.name }}</p>
+                <p class="category-product-category">{{ product.category.name }}</p>
+                <p class="category-product-price">₹{% if product.base_price %}{{ product.base_price|floatformat:0 }}{%
+                  else %}{{ product.price_label }}{% endif %}</p>
+              </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+              <span class="material-symbols-outlined">inventory_2</span>
+              <p>Products coming soon</p>
+            </div>
             {% endfor %}
           </div>
+
+          <button class="category-carousel-arrow next" onclick="scrollCategoryCarousel(1)" aria-label="Next">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
         </div>
-        {% endfor %}
-      </div>
-    </div>
-  </section>
-  {% endif %}
 
-
-  <!-- ═══════════════════════════════════════════
-       CATEGORY HIGHLIGHTS
-  ════════════════════════════════════════════ -->
-  <section class="py-16 md:py-24 bg-surface">
-    <div class="max-w-7xl mx-auto px-6 md:px-12">
-
-      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12 reveal">
-        <div>
-          <div class="section-kicker">
-            <div class="section-kicker-line"></div>
-            <span class="section-kicker-text">Shop by Occasion</span>
-          </div>
-          <h2 class="text-3xl md:text-4xl font-serif text-on-surface">What We Curate</h2>
-        </div>
-        <a href="{% url 'products' %}"
-           class="inline-flex items-center gap-1 text-primary font-bold uppercase tracking-widest text-[10px] border-b border-primary pb-0.5 hover:opacity-70 transition-opacity w-fit">
-          All Categories
-          <span class="material-symbols-outlined text-sm">arrow_forward</span>
-        </a>
-      </div>
-
-      <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-x-4 gap-y-8 justify-items-center reveal">
-        {% for cat in categories %}
-          <a href="{% url 'products' %}?category={{ cat.slug }}" class="cat-pill">
-            <div class="cat-pill-img">
-              {% if cat.image %}
-                <img src="{{ cat.image_url }}" alt="{{ cat.display_name|default:cat.name }}" class="home-fit-image">
-              {% else %}
-                <span class="material-symbols-outlined text-3xl text-primary">redeem</span>
-              {% endif %}
-            </div>
-            <span class="cat-pill-label">{{ cat.display_name|default:cat.name }}</span>
+        <!-- View All -->
+        <div class="text-center mt-12 reveal">
+          <a href="{% url 'products' %}"
+            class="inline-flex items-center gap-2 text-primary font-bold uppercase tracking-widest text-[13px] hover:opacity-70 transition-opacity">
+            View All Products
+            <span class="material-symbols-outlined">arrow_forward</span>
           </a>
-        {% empty %}
-          <div class="col-span-full text-sm text-secondary text-center py-6">Add categories in the dashboard to show them here.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Data store for all products by category (used by JS filter) -->
+    <script id="products-data" type="application/json">
+  {
+    {% for cat_name, products in ordered_products_by_category %}
+      "{{ cat_name|escapejs }}": [
+        {% for product in products %}
+          {
+            "id": {{ product.id }},
+            "name": "{{ product.name|escapejs }}",
+            "category": "{{ product.category.name|escapejs }}",
+            "price": {% if product.base_price %}{{ product.base_price }}{% else %}"{{ product.price_label|escapejs }}"{% endif %},
+            "image": "{% if product.cover_image_url %}{{ product.cover_image_url|escapejs }}{% else %}{% endif %}",
+            "hoverImage": "{% if product.gallery_image_url and product.gallery_image_url != product.cover_image_url %}{{ product.gallery_image_url|escapejs }}{% else %}{% endif %}"
+          }{% if not forloop.last %},{% endif %}
         {% endfor %}
-      </div>
-    </div>
-  </section>
+      ]{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  }
+</script>
+    <script>
+      const productsByCategory = JSON.parse(document.getElementById('products-data').textContent);
 
+      function filterProductsByCategory(button) {
+        const categoryName = button.getAttribute('data-category');
+        const products = productsByCategory[categoryName] || [];
 
-  <!-- ═══════════════════════════════════════════
-       FEATURED COLLECTIONS
-  ════════════════════════════════════════════ -->
-  <section class="py-16 md:py-24 px-6 md:px-12">
-    <div class="max-w-7xl mx-auto">
-      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12 reveal">
-        <div>
-          <div class="section-kicker">
-            <div class="section-kicker-line"></div>
-            <span class="section-kicker-text">Collections</span>
-          </div>
-          <h2 class="text-3xl md:text-4xl font-serif text-on-surface">Curated for Every Moment</h2>
+        document.querySelectorAll('.category-tab').forEach(tab => {
+          tab.classList.remove('active');
+        });
+        button.classList.add('active');
+
+        const carousel = document.getElementById('categoryCarouselTrack');
+        carousel.innerHTML = '';
+
+        if (products.length === 0) {
+          carousel.innerHTML = '<div class="empty-state"><span class="material-symbols-outlined">inventory_2</span><p>No products in this category yet</p></div>';
+          return;
+        }
+
+        products.forEach(product => {
+          const imgHtml = product.image
+            ? `<img src="${product.image}" alt="${product.name}" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0">${product.hoverImage ? `<img src="${product.hoverImage}" alt="${product.name}" loading="lazy" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100">` : ''}`
+            : `<div style="width:100%;height:230px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;"><span class="material-symbols-outlined" style="font-size:40px;color:#dddddd;">redeem</span></div>`;
+
+          const card = document.createElement('div');
+          card.className = 'category-product-card';
+          card.setAttribute('data-product-id', product.id);
+          card.setAttribute('data-category', categoryName);
+          card.innerHTML = `
+        <div class="category-product-img group">
+          ${imgHtml}
+          <button class="category-product-wishlist" aria-label="Add to wishlist" data-hamper-id="${product.id}">
+            <span class="material-symbols-outlined" style="font-size:16px;">favorite</span>
+          </button>
         </div>
-      </div>
+        <div class="category-product-info">
+          <p class="category-product-name">${product.name}</p>
+          <p class="category-product-category">${product.category}</p>
+          <p class="category-product-price">₹${typeof product.price === 'string' ? product.price : Math.floor(product.price)}</p>
+        </div>
+      `;
+          carousel.appendChild(card);
+        });
 
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 reveal">
-        <div class="collection-card md:col-span-7 h-[460px] md:h-[540px]">
-          <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=1170&auto=format&fit=crop"
-               alt="Wedding collection" loading="lazy" class="home-fit-image">
-          <div class="collection-card-overlay">
-            <span class="text-[9px] font-bold uppercase tracking-[0.2em] text-white/55 mb-2">Featured Collection</span>
-            <h3 class="text-white text-3xl md:text-4xl font-serif mb-3 leading-tight">The Wedding Collective</h3>
-            <p class="text-white/70 mb-6 text-sm max-w-xs leading-relaxed">Timeless treasures for the couple beginning their forever.</p>
-            <a href="{% url 'products' %}" class="collection-card-arrow">
-              Explore Collection
-              <span class="material-symbols-outlined text-sm">arrow_forward</span>
-            </a>
+        carousel.scrollLeft = 0;
+      }
+
+      function scrollCategoryCarousel(direction) {
+        const carousel = document.getElementById('categoryCarouselTrack');
+        carousel.scrollBy({ left: direction * 300, behavior: 'smooth' });
+      }
+    </script>
+
+    <!-- ── FEATURED COLLECTIONS ───────────────────────────────────────────────── -->
+    <section class="py-16 md:py-24">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12 reveal">
+          <div>
+            <div class="section-kicker">
+              <div class="section-kicker-line"></div>
+              <span class="section-kicker-text">Collections</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-sans-serif text-on-surface">Curated for Every Moment</h2>
           </div>
         </div>
-
-        <div class="md:col-span-5 flex flex-col gap-4">
-          <div class="collection-card flex-1 min-h-[260px]">
-            <img src="https://images.pexels.com/photos/5486837/pexels-photo-5486837.jpeg"
-                 alt="Corporate gifting" loading="lazy" class="home-fit-image">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 reveal">
+          <div class="collection-card md:col-span-7 h-[460px] md:h-[540px]">
+            <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=1170&auto=format&fit=crop"
+              alt="Wedding gifts and hampers collection" loading="lazy" class="home-fit-image">
             <div class="collection-card-overlay">
-              <span class="text-[9px] font-bold uppercase tracking-[0.2em] text-white/55 mb-1">For Teams</span>
-              <h3 class="text-white text-2xl font-serif mb-3 leading-tight">Corporate Gifting</h3>
-              <a href="{% url 'products' %}" class="collection-card-arrow">
-                Explore
+              <span class="text-[9px] font-bold uppercase tracking-[0.2em] text-white/55 mb-2">Featured
+                Collection</span>
+              <h3 class="text-white text-3xl md:text-4xl font-sans-serif mb-3 leading-tight">The Wedding Collective</h3>
+              <p class="text-white/70 mb-6 text-sm max-w-xs leading-relaxed">Timeless treasures for the couple beginning
+                their forever.</p>
+              <a href="{% url 'products' %}?category=wedding" class="collection-card-arrow">
+                Explore Collection
                 <span class="material-symbols-outlined text-sm">arrow_forward</span>
               </a>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ═══════════════════════════════════════════
-       BEST SELLERS CAROUSEL
-  ════════════════════════════════════════════ -->
-  <section class="py-16 md:py-24 bg-[#fff8f7] border-y border-[#f0dcdc]">
-    <div class="max-w-7xl mx-auto px-6 md:px-12 mb-8 flex justify-between items-end reveal">
-      <div>
-        <div class="section-kicker">
-          <div class="section-kicker-line"></div>
-          <span class="section-kicker-text">Most Loved</span>
-        </div>
-        <h2 class="text-3xl md:text-4xl font-serif text-on-surface">Best Sellers</h2>
-        <p class="text-secondary mt-1 text-sm">Hampers our clients keep coming back for.</p>
-      </div>
-      <div class="flex gap-2">
-        <button id="carouselPrev" aria-label="Previous"
-                class="w-10 h-10 rounded-full border border-outline-variant bg-white hover:border-primary hover:text-primary transition-all flex items-center justify-center shadow-sm">
-          <span class="material-symbols-outlined text-base">chevron_left</span>
-        </button>
-        <button id="carouselNext" aria-label="Next"
-                class="w-10 h-10 rounded-full border border-outline-variant bg-white hover:border-primary hover:text-primary transition-all flex items-center justify-center shadow-sm">
-          <span class="material-symbols-outlined text-base">chevron_right</span>
-        </button>
-      </div>
-    </div>
-
-    <div id="carouselTrack" class="flex gap-5 overflow-x-auto no-scrollbar px-6 md:px-12 pb-4">
-      {% for hamper in best_sellers|slice:":8" %}
-      <div class="product-card w-[270px]">
-        <a href="{% url 'product_detail' hamper.id %}" class="product-card-img block aspect-square relative">
-          {% if hamper.cover_image %}
-            <img src="{{ hamper.cover_image_url }}" alt="{{ hamper.name }}" loading="lazy">
-          {% else %}
-            <div class="w-full h-full bg-surface-container flex items-center justify-center">
-              <span class="material-symbols-outlined text-4xl text-outline">image_not_supported</span>
-            </div>
-          {% endif %}
-          {% if hamper.is_featured %}
-            <span class="absolute top-3 left-3 wd-badge wd-badge-primary">Featured</span>
-          {% endif %}
-          <span class="product-card-quick">View Product →</span>
-        </a>
-        <div class="p-4 flex flex-col gap-2 flex-1">
-          <a href="{% url 'product_detail' hamper.id %}"
-             class="font-serif text-[15px] text-on-surface leading-snug line-clamp-2 hover:text-primary transition-colors min-h-[2.8rem]">
-            {{ hamper.name }}
-          </a>
-          <div class="flex items-center justify-between mt-auto pt-2">
-            <span class="text-primary font-bold text-base">
-              {% if hamper.base_price %}₹{{ hamper.base_price }}{% else %}On Request{% endif %}
-            </span>
-            <a href="{% url 'custom_hamper' %}"
-               class="text-[9px] font-bold uppercase tracking-widest text-secondary border border-outline-variant rounded-lg px-3 py-1.5 hover:border-primary hover:text-primary transition-all">
-              Add
-            </a>
-          </div>
-        </div>
-      </div>
-      {% empty %}
-      <p class="text-secondary text-sm py-8 px-4">No best sellers yet.</p>
-      {% endfor %}
-    </div>
-  </section>
-
-
-  <!-- ═══════════════════════════════════════════
-       HOW IT WORKS
-       FIX: removed "80+ cities" step — replaced with "Enquire & Confirm"
-       to match inquiry-first B2B model
-  ════════════════════════════════════════════ -->
-  <section class="py-16 md:py-24 bg-surface">
-    <div class="max-w-7xl mx-auto px-6 md:px-12">
-
-      <div class="text-center mb-14 reveal">
-        <div class="section-kicker justify-center">
-          <div class="section-kicker-line"></div>
-          <span class="section-kicker-text">Our Process</span>
-          <div class="section-kicker-line"></div>
-        </div>
-        <h2 class="text-3xl md:text-4xl font-serif text-on-surface mt-2">How It Works</h2>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 reveal">
-
-        <div class="how-step">
-          <div class="how-step-number">01</div>
-          <div class="how-step-icon">
-            <span class="material-symbols-outlined text-primary" style="font-size:22px;">search</span>
-          </div>
-          <div>
-            <h3 class="font-serif text-lg text-on-surface mb-1">Browse & Pick</h3>
-            <p class="text-sm text-secondary leading-relaxed">Explore 500+ curated gifts across every occasion and budget.</p>
-          </div>
-        </div>
-
-        <div class="how-step">
-          <div class="how-step-number">02</div>
-          <div class="how-step-icon">
-            <span class="material-symbols-outlined text-primary" style="font-size:22px;">edit_note</span>
-          </div>
-          <div>
-            <h3 class="font-serif text-lg text-on-surface mb-1">Personalize</h3>
-            <p class="text-sm text-secondary leading-relaxed">Add a heartfelt note, custom branding, or mix-and-match products.</p>
-          </div>
-        </div>
-
-        <div class="how-step">
-          <div class="how-step-number">03</div>
-          <div class="how-step-icon">
-            <span class="material-symbols-outlined text-primary" style="font-size:22px;">inventory_2</span>
-          </div>
-          <div>
-            <h3 class="font-serif text-lg text-on-surface mb-1">We Wrap It</h3>
-            <p class="text-sm text-secondary leading-relaxed">Every hamper is hand-packed with premium wrapping and care.</p>
-          </div>
-        </div>
-
-        <div class="how-step">
-          <div class="how-step-number">04</div>
-          <div class="how-step-icon">
-            <span class="material-symbols-outlined text-primary" style="font-size:22px;">handshake</span>
-          </div>
-          <div>
-            <h3 class="font-serif text-lg text-on-surface mb-1">Enquire & Confirm</h3>
-            <p class="text-sm text-secondary leading-relaxed">Reach us on WhatsApp or call — we confirm your order directly with a quote.</p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ═══════════════════════════════════════════
-       BUILD YOUR OWN — CTA DARK
-  ════════════════════════════════════════════ -->
-  <section class="py-8 px-6 md:px-12">
-    <div class="max-w-7xl mx-auto reveal">
-      <div class="cta-dark">
-        <div class="flex flex-col md:flex-row items-stretch">
-          <div class="relative z-10 flex-1 p-10 md:p-16 lg:p-20 flex flex-col justify-center">
-            <div class="section-kicker mb-4">
-              <div class="section-kicker-line" style="background:#ffb3ac;"></div>
-              <span class="section-kicker-text" style="color:#ffb3ac;">Personalization Studio</span>
-            </div>
-            <h2 class="text-3xl md:text-5xl text-white font-serif mb-5 leading-tight">
-              A Gift as Unique as<br>
-              <em class="text-primary-fixed-dim not-italic">Your Story</em>
-            </h2>
-            <p class="text-neutral-400 text-[15px] mb-8 max-w-md leading-relaxed">
-              Choose the box, hand-pick the contents, and write a heartfelt note. We'll wrap it beautifully — every time.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-3">
-              <a href="{% url 'custom_hamper' %}"
-                 class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-xl font-bold text-sm tracking-widest uppercase hover:bg-on-primary-fixed-variant transition-all active:scale-95 w-fit">
-                Start Building
-                <span class="material-symbols-outlined">auto_fix_high</span>
-              </a>
-              <a href="{% url 'products' %}"
-                 class="inline-flex items-center gap-2 px-8 py-4 bg-white/10 text-white rounded-xl font-bold text-sm tracking-widest uppercase hover:bg-white/20 border border-white/15 transition-all active:scale-95 w-fit">
-                Browse Catalog
-              </a>
-            </div>
-          </div>
-          <div class="cta-dark-img flex-1 min-h-[320px] relative">
-            <img src="https://images.pexels.com/photos/6833311/pexels-photo-6833311.jpeg"
-                 alt="Gifting process" loading="lazy">
-            <div class="cta-dark-stat">
-              <p class="text-2xl font-serif font-bold">500+</p>
-              <p class="text-[10px] uppercase tracking-[0.14em] text-white/65 mt-0.5">Products to choose from</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ═══════════════════════════════════════════
-       WEDDING / FEATURED PRODUCTS
-  ════════════════════════════════════════════ -->
-  <section class="py-16 md:py-24 px-6 md:px-12">
-    <div class="max-w-7xl mx-auto">
-      <div class="flex justify-between items-end mb-12 reveal">
-        <div>
-          <div class="section-kicker">
-            <div class="section-kicker-line"></div>
-            <span class="section-kicker-text">Just In</span>
-          </div>
-          <h2 class="text-3xl md:text-4xl font-serif text-on-surface">Wedding Collection</h2>
-        </div>
-        <a href="{% url 'products' %}"
-           class="inline-flex items-center gap-1 text-primary font-bold uppercase tracking-widest text-[10px] border-b border-primary pb-0.5 hover:opacity-70 transition-opacity">
-          View All
-          <span class="material-symbols-outlined text-sm">arrow_forward</span>
-        </a>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
-        {% for hamper in featured_hampers %}
-        <div class="occasion-card group">
-          <div class="occasion-card-img aspect-[3/4] relative overflow-hidden">
-            {% if hamper.cover_image %}
-              <img src="{{ hamper.cover_image_url }}" alt="{{ hamper.name }}" loading="lazy"
-                   class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700">
-            {% else %}
-              <div class="w-full h-full bg-surface-container flex items-center justify-center min-h-[280px]">
-                <span class="material-symbols-outlined text-4xl text-outline">image_not_supported</span>
+          <div class="md:col-span-5 flex flex-col gap-4">
+            <div class="collection-card flex-1 min-h-[260px]">
+              <img src="https://images.pexels.com/photos/5486837/pexels-photo-5486837.jpeg"
+                alt="Corporate gifting solutions" loading="lazy" class="home-fit-image">
+              <div class="collection-card-overlay">
+                <span class="text-[9px] font-bold uppercase tracking-[0.2em] text-white/55 mb-1">For Teams &
+                  Clients</span>
+                <h3 class="text-white text-2xl font-sans-serif mb-3 leading-tight">Corporate Gifting</h3>
+                <a href="{% url 'products' %}?category=corporate" class="collection-card-arrow">
+                  Explore
+                  <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </a>
               </div>
-            {% endif %}
-            <a href="{% url 'custom_hamper' %}"
-               class="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-sm text-on-surface py-2.5 rounded-xl font-bold text-[10px] uppercase tracking-widest shadow-lg text-center border border-outline-variant translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-              Quick Add
-            </a>
-          </div>
-          <div class="p-4 flex flex-col gap-1">
-            <a href="{% url 'product_detail' hamper.id %}"
-               class="font-serif text-[15px] text-on-surface leading-snug line-clamp-2 hover:text-primary transition-colors">{{ hamper.name }}</a>
-            <p class="text-primary font-bold text-sm">
-              {% if hamper.base_price %}₹{{ hamper.base_price }}{% else %}On Request{% endif %}
-            </p>
-          </div>
-        </div>
-        {% empty %}
-        <p class="col-span-4 text-secondary text-sm text-center py-10">No wedding products yet.</p>
-        {% endfor %}
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ═══════════════════════════════════════════
-       TESTIMONIALS
-  ════════════════════════════════════════════ -->
-  <section class="py-16 md:py-24 bg-[#fff8f7] border-y border-[#f0dcdc]">
-    <div class="max-w-7xl mx-auto px-6 md:px-12">
-
-      <div class="text-center mb-12 reveal">
-        <div class="section-kicker justify-center">
-          <div class="section-kicker-line"></div>
-          <span class="section-kicker-text">Testimonials</span>
-          <div class="section-kicker-line"></div>
-        </div>
-        <h2 class="text-3xl md:text-4xl font-serif text-on-surface mt-2">Words from Our Clients</h2>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 reveal">
-        <div class="testimonial-card">
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-quote">"Every single detail was perfect — from the packaging to the personal note. Our corporate team absolutely loved it."</p>
-          <div>
-            <p class="testimonial-author">Priya Nair</p>
-            <p class="text-[11px] text-secondary">HR Manager, Pune</p>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-quote">"We ordered 200+ wedding favours and WrappDelights delivered flawlessly. The presentation was stunning."</p>
-          <div>
-            <p class="testimonial-author">Rahul & Sneha Mehta</p>
-            <p class="text-[11px] text-secondary">Pune</p>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-quote">"The custom hamper builder made it so easy to personalise gifts for each team member. Will definitely reorder."</p>
-          <div>
-            <p class="testimonial-author">Aditya Sharma</p>
-            <p class="text-[11px] text-secondary">Founder, Bangalore</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-
-  <!-- ═══════════════════════════════════════════
-       CORPORATE CTA BANNER
-       FIX: removed "pan-India delivery" language.
-            Changed to "custom branding & bulk orders"
-       FIX: z-index stacking now correct (::after has pointer-events:none + z:0)
-  ════════════════════════════════════════════ -->
-  <section class="py-16 md:py-24 px-6 md:px-12">
-    <div class="max-w-7xl mx-auto reveal">
-      <div class="corp-banner p-10 md:p-14 flex flex-col md:flex-row items-center gap-8 justify-between">
+    <!-- ── BEST SELLERS CAROUSEL ──────────────────────────────────────────────── -->
+    <section class="py-16 md:py-24 border-y border-[#dddddd]">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12 mb-8 flex justify-between items-end reveal">
         <div>
           <div class="section-kicker">
             <div class="section-kicker-line"></div>
-            <span class="section-kicker-text">For Enterprises</span>
+            <span class="section-kicker-text">Most Loved</span>
           </div>
-          <h2 class="text-3xl md:text-4xl font-serif text-on-surface mt-1 mb-3">Bulk Corporate Gifting?</h2>
-          <p class="text-secondary text-[15px] max-w-md leading-relaxed">From Diwali gifts to employee welcome kits — we handle bulk orders with custom branding. Get a quote within 24 hours.</p>
+          <h2 class="text-3xl md:text-4xl font-sans-serif text-on-surface">Best Sellers</h2>
+          <p class="text-secondary mt-1 text-sm">Hampers our clients keep coming back for.</p>
         </div>
-        <div class="flex flex-col sm:flex-row gap-3 flex-shrink-0">
-          <a href="tel:+919309810348"
-             class="inline-flex items-center gap-2 px-7 py-4 bg-primary text-white rounded-xl font-bold text-sm uppercase tracking-widest hover:bg-on-primary-fixed-variant transition-all active:scale-95">
-            <span class="material-symbols-outlined text-base">call</span>
-            Call Us
-          </a>
-          <a href="https://wa.me/919309810348?text=Hi%2C%20I%27d%20like%20to%20explore%20bulk%20gifting."
-             target="_blank" rel="noopener"
-             class="inline-flex items-center gap-2 px-7 py-4 bg-white border-2 border-outline-variant text-on-surface rounded-xl font-bold text-sm uppercase tracking-widest hover:border-[#25D366] hover:text-[#25D366] transition-all active:scale-95">
-            <span class="material-symbols-outlined text-base">chat</span>
-            WhatsApp
-          </a>
+        <div class="flex gap-2">
+          <button id="carouselPrev" aria-label="Previous"
+            class="w-10 h-10 rounded-full border border-outline-variant bg-white hover:border-primary hover:text-primary transition-all flex items-center justify-center shadow-sm">
+            <span class="material-symbols-outlined text-base">chevron_left</span>
+          </button>
+          <button id="carouselNext" aria-label="Next"
+            class="w-10 h-10 rounded-full border border-outline-variant bg-white hover:border-primary hover:text-primary transition-all flex items-center justify-center shadow-sm">
+            <span class="material-symbols-outlined text-base">chevron_right</span>
+          </button>
         </div>
       </div>
-    </div>
-  </section>
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12">
+        <div id="carouselTrack" class="flex gap-5 overflow-x-auto no-scrollbar pb-4">
 
-</div>
-{% endblock %}
+          {% for product in best_sellers %}
+          <div class="product-card w-[260px] md:w-[310px] shrink-0">
+            <a href="{% url 'product_detail' product.id %}" class="product-card-img block aspect-square relative">
+              {% if product.cover_image %}
+              <img src="{{ product.cover_image.url }}" alt="{{ product.name }}" loading="lazy">
+              {% else %}
+              <div class="w-full h-full bg-[#f5f5f5] flex items-center justify-center" style="aspect-ratio:1;">
+                <span class="material-symbols-outlined text-5xl" style="color:#dddddd;">redeem</span>
+              </div>
+              {% endif %}
+              {% if product.is_featured %}<span
+                class="wd-badge wd-badge-primary absolute top-3 left-3">Featured</span>{% endif %}
+              {% if product.is_bestseller %}<span class="wd-badge wd-badge-primary absolute top-3 left-3">Best
+                Seller</span>{% endif %}
+              <span class="product-card-quick">View Product →</span>
+            </a>
+            <div class="p-4 flex flex-col gap-2 flex-1">
+              <a href="{% url 'product_detail' product.id %}"
+                class="font-sans-serif text-[15px] text-on-surface leading-snug hover:text-primary transition-colors min-h-[2.8rem]">{{
+                product.name }}</a>
+              <div class="flex items-center justify-between mt-auto pt-2">
+                {% if product.base_price %}
+                <span class="text-primary font-bold text-base">₹{{ product.base_price|floatformat:0 }}</span>
+                {% else %}
+                <span class="text-secondary text-sm">{{ product.price_label }}</span>
+                {% endif %}
+                <a href="{% url 'custom_hamper' %}"
+                  class="text-[10px] font-bold uppercase tracking-widest text-secondary border border-outline-variant rounded-lg px-3 py-2 hover:border-primary hover:text-primary transition-all">Add</a>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+          <div class="empty-state w-full">
+            <span class="material-symbols-outlined">inventory_2</span>
+            <p>Best sellers coming soon — check back shortly.</p>
+          </div>
+          {% endfor %}
 
-{% block extra_js %}
-<script>
-  (() => {
-    /* Hero slideshow */
-    const slides = Array.from(document.querySelectorAll('[data-hero]'));
-    const dots   = Array.from(document.querySelectorAll('[data-hero-dot]'));
-    if (slides.length && dots.length) {
-      let current = 0, timer;
-      const activate = (i) => {
-        current = i;
-        slides.forEach((s, idx) => s.classList.toggle('hidden', idx !== current));
-        dots.forEach((d, idx) => {
-          d.classList.toggle('bg-primary',         idx === current);
-          d.classList.toggle('bg-outline-variant', idx !== current);
-          d.classList.toggle('w-10', idx === current);
-          d.classList.toggle('w-5',  idx !== current);
+        </div>
+      </div>
+    </section>
+
+    <!-- ── WHAT WE'RE POPULAR FOR ─────────────────────────────────────────────── -->
+    {% if corporate_welcome_hampers %}
+    <section class="py-16 md:py-24">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12 reveal">
+          <div>
+            <div class="section-kicker">
+              <div class="section-kicker-line"></div>
+              <span class="section-kicker-text">Popular For</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-sans-serif text-on-surface mt-2">What We&apos;re Popular For</h2>
+            <p class="text-secondary mt-2 text-sm max-w-2xl">Corporate gifting picks that work well for teams, events,
+              and client milestones.</p>
+          </div>
+          <a href="{% url 'corporate' %}"
+            class="inline-flex items-center gap-1 text-primary font-bold uppercase tracking-widest text-[10px] border-b border-primary pb-0.5 hover:opacity-70 transition-opacity">
+            Corporate Desk
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
+          {% for product in corporate_welcome_hampers|slice:":4" %}
+          <div class="product-card group">
+            <a href="{% url 'product_detail' product.id %}" class="product-card-img block aspect-square relative">
+              {% if product.cover_image %}
+              <img src="{{ product.cover_image.url }}" alt="{{ product.name }}" loading="lazy">
+              {% else %}
+              <div class="w-full h-full bg-[#f5f5f5] flex items-center justify-center" style="aspect-ratio:1;">
+                <span class="material-symbols-outlined text-5xl" style="color:#dddddd;">business_center</span>
+              </div>
+              {% endif %}
+              <span class="wd-badge wd-badge-primary absolute top-3 left-3">Corporate</span>
+              <span class="product-card-quick">View Product →</span>
+            </a>
+            <div class="p-4 flex flex-col gap-2 flex-1">
+              <a href="{% url 'product_detail' product.id %}"
+                class="font-sans-serif text-[15px] font-bold text-on-surface leading-snug hover:text-primary transition-colors min-h-[2.8rem]">{{
+                product.name }}</a>
+              <div class="flex items-center justify-between mt-auto pt-2">
+                {% if product.base_price %}
+                <span class="text-primary font-bold text-[16px]">₹{{ product.base_price|floatformat:0 }}</span>
+                {% else %}
+                <span class="text-secondary text-sm">{{ product.price_label }}</span>
+                {% endif %}
+                <a href="{% url 'corporate' %}"
+                  class="text-[10px] font-bold uppercase tracking-widest text-secondary border border-outline-variant rounded-lg px-3 py-2 hover:border-primary hover:text-primary transition-all">Enquire</a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
+    <!-- ── BUILD YOUR OWN — CTA DARK ─────────────────────────────────────────── -->
+    <section class="py-12 md:py-16">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12 reveal">
+        <div class="accordion-wrapper">
+          <div class="flex flex-col md:flex-row md:items-end justify-between mb-2">
+            <div>
+              <div class="section-kicker mb-3">
+                <div class="section-kicker-line"></div>
+                <span class="section-kicker-text">Personalization Studio</span>
+              </div>
+              <h2 class="text-4xl md:text-5xl font-sans-serif text-on-surface">Build Your Own Hamper</h2>
+            </div>
+            <a href="{% url 'custom_hamper' %}"
+              class="mt-6 md:mt-0 inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white rounded-xl font-bold text-sm tracking-widest uppercase hover:bg-on-primary-fixed-variant transition-all w-fit">
+              Start Building
+              <span class="material-symbols-outlined">auto_fix_high</span>
+            </a>
+          </div>
+
+          <div class="accordion-carousel">
+            <!-- Card 1 -->
+            <a href="{% url 'custom_hamper' %}" class="accordion-card">
+              <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=800&auto=format&fit=crop"
+                alt="Choose Your Box" loading="lazy">
+              <div class="accordion-num">1</div>
+              <div class="accordion-icon"><span class="material-symbols-outlined">package</span></div>
+              <div class="accordion-content">
+                <h3 class="accordion-title">Choose Your Box</h3>
+                <p class="accordion-desc">Select from our range of premium, handcrafted gift boxes.</p>
+              </div>
+            </a>
+
+            <!-- Card 2 -->
+            <a href="{% url 'custom_hamper' %}" class="accordion-card">
+              <img src="https://images.unsplash.com/photo-1513885535751-8b9238bd345a?q=80&w=800&auto=format&fit=crop"
+                alt="Handpick Items" loading="lazy">
+              <div class="accordion-num">2</div>
+              <div class="accordion-icon"><span class="material-symbols-outlined">shopping_bag</span></div>
+              <div class="accordion-content">
+                <h3 class="accordion-title">Handpick Items</h3>
+                <p class="accordion-desc">Curate the perfect combination from 500+ luxury products.</p>
+              </div>
+            </a>
+
+            <!-- Card 3 -->
+            <a href="{% url 'custom_hamper' %}" class="accordion-card">
+              <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=800&auto=format&fit=crop"
+                alt="Add a Message" loading="lazy">
+              <div class="accordion-num">3</div>
+              <div class="accordion-icon"><span class="material-symbols-outlined">edit_document</span></div>
+              <div class="accordion-content">
+                <h3 class="accordion-title">Add a Message</h3>
+                <p class="accordion-desc">Write a heartfelt note that we'll print on a beautiful card.</p>
+              </div>
+            </a>
+
+            <!-- Card 4 -->
+            <a href="{% url 'custom_hamper' %}" class="accordion-card">
+              <img src="https://images.unsplash.com/photo-1497700003451-e1df943a194b?q=80&w=1470&auto=format&fit=crop"
+                alt="Review & Request" loading="lazy">
+              <div class="accordion-num">4</div>
+              <div class="accordion-icon"><span class="material-symbols-outlined">send</span></div>
+              <div class="accordion-content">
+                <h3 class="accordion-title">Review & Request</h3>
+                <p class="accordion-desc">Review your curated hamper and submit an inquiry for a quick bulk order quote.</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── WEDDING COLLECTION — PULLED FROM DB ───────────────────────────────── -->
+    <!--
+  NOTE: Hardcoded fake products removed. This section now renders real wedding
+  products from the database via the `wedding_products` context variable.
+  In your view, pass: `wedding_products = Product.objects.filter(category__slug='wedding')[:4]`
+  If the context variable is not yet available, the section is hidden gracefully.
+-->
+    {% if wedding_products %}
+    <section class="py-16 md:py-24">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12">
+        <div class="flex justify-between items-end mb-12 reveal">
+          <div>
+            <div class="section-kicker">
+              <div class="section-kicker-line"></div>
+              <span class="section-kicker-text">Just In</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-sans-serif text-on-surface">Wedding Collection</h2>
+          </div>
+          <a href="{% url 'products' %}?category=wedding"
+            class="inline-flex items-center gap-1 text-primary font-bold uppercase tracking-widest text-[10px] border-b border-primary pb-0.5 hover:opacity-70 transition-opacity">
+            View All
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
+          {% for product in wedding_products %}
+          <div class="product-card group"
+            style="border-radius: 14px;overflow:hidden;border:1px solid #dddddd;display:flex;flex-direction:column;transition:box-shadow 0.3s ease,transform 0.3s ease;">
+            <div style="overflow:hidden;background:#f7ecee;aspect-ratio:3/4;position:relative;">
+              {% if product.cover_image_url %}
+              <img src="{{ product.cover_image_url }}" alt="{{ product.name }}" loading="lazy"
+                style="width:100%;height:100%;object-fit:cover;transition:opacity 0.35s ease,transform 0.6s ease;position:absolute;inset:0;"
+                class="group-hover:opacity-0">
+              {% if product.gallery_image_url and product.gallery_image_url != product.cover_image_url %}
+              <img src="{{ product.gallery_image_url }}" alt="{{ product.name }}" loading="lazy"
+                style="width:100%;height:100%;object-fit:cover;transition:opacity 0.35s ease,transform 0.6s ease;position:absolute;inset:0;opacity:0;"
+                class="group-hover:opacity-100 group-hover:scale-105">
+              {% endif %}
+              {% else %}
+              <div
+                style="width:100%;height:100%;background:#f5eeee;display:flex;align-items:center;justify-content:center;">
+                <span class="material-symbols-outlined" style="font-size:48px;color:#dddddd;">redeem</span>
+              </div>
+              {% endif %}
+              <a href="{% url 'product_detail' product.id %}"
+                class="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-sm text-on-surface py-2.5 rounded-xl font-bold text-[10px] uppercase tracking-widest shadow-lg text-center border border-outline-variant translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">Quick
+                View</a>
+            </div>
+            <div class="p-4 flex flex-col gap-1">
+              <a href="{% url 'product_detail' product.id %}"
+                class="font-sans-serif text-[15px] text-on-surface leading-snug hover:text-primary transition-colors">{{
+                product.name }}</a>
+              {% if product.base_price %}
+              <p class="text-primary font-bold text-sm">₹{{ product.base_price|floatformat:0 }}</p>
+              {% else %}
+              <p class="text-secondary text-sm">{{ product.price_label }}</p>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
+    <!-- ── PRODUCT VIDEOS ─────────────────────────────────────────────────────── -->
+    <section class="py-20 md:py-32">
+      <div class="w-full max-w-5xl mx-auto px-6 md:px-12 lg:px-20">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16 reveal">
+          <div>
+            <div class="section-kicker">
+              <div class="section-kicker-line"></div>
+              <span class="section-kicker-text">Watch Them Shine</span>
+            </div>
+            <h2 class="text-4xl md:text-5xl font-sans-serif text-on-surface mt-4">Products in Motion</h2>
+            <p class="text-secondary mt-2 text-base">A closer look at the gifting details, packaging, and presentation.
+            </p>
+          </div>
+          <a href="https://www.instagram.com/wrappdelights/" target="_blank" rel="noopener"
+            class="inline-flex items-center gap-2 text-primary font-bold uppercase tracking-widest text-[11px] border-b border-primary pb-0.5 hover:opacity-70 transition-opacity w-fit">
+            View on Instagram
+            <span class="material-symbols-outlined text-base">open_in_new</span>
+          </a>
+        </div>
+
+        <!-- Video Grid: Large on Left, 2 Stacked on Right -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 reveal">
+          <!-- Large Video on Left (Cycles through all videos) -->
+          <div class="md:col-span-2">
+            <div id="largeVideoContainer"
+              class="rounded-3xl overflow-hidden border-2 border-outline-variant bg-black shadow-lg group relative aspect-[4/5]">
+              <video id="largeVideo" class="w-full h-full object-cover" autoplay muted loop playsinline>
+                <source
+                  src="https://res.cloudinary.com/dwti6e55r/video/upload/v1778234370/Video_by_wrappdelights_DVDhPVlkf2p_qyb3bl.mp4"
+                  type="video/mp4">
+              </video>
+              <div
+                class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                <span
+                  class="material-symbols-outlined text-6xl text-white opacity-0 group-hover:opacity-100 transition-opacity">play_arrow</span>
+              </div>
+              <!-- Video Counter -->
+              <div
+                class="absolute top-6 right-6 bg-black/60 backdrop-blur-sm px-4 py-2 rounded-full text-white text-sm font-bold">
+                <span id="videoCounter">1</span> / 9
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: 2 Stacked Videos (Cycle independently) -->
+          <div class="flex flex-col gap-6">
+            <!-- Small Video 1 (Top Right) -->
+            <div id="rightVideo1Container"
+              class="rounded-3xl overflow-hidden border-2 border-outline-variant bg-black shadow-lg group relative aspect-[9/12]">
+              <video id="rightVideo1" class="w-full h-full object-cover" autoplay muted loop playsinline>
+                <source
+                  src="https://res.cloudinary.com/dwti6e55r/video/upload/v1778234371/Video_by_wrappdelights_DU45Nr6DNRJ_hjdugu.mp4"
+                  type="video/mp4">
+              </video>
+              <div
+                class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                <span
+                  class="material-symbols-outlined text-5xl text-white opacity-0 group-hover:opacity-100 transition-opacity">play_arrow</span>
+              </div>
+            </div>
+
+            <!-- Small Video 2 (Bottom Right) -->
+            <div id="rightVideo2Container"
+              class="rounded-3xl overflow-hidden border-2 border-outline-variant bg-black shadow-lg group relative aspect-[9/12]">
+              <video id="rightVideo2" class="w-full h-full object-cover" autoplay muted loop playsinline>
+                <source
+                  src="https://res.cloudinary.com/dwti6e55r/video/upload/v1778234371/Video_by_wrappdelights_DU6HmtjE-ms_bpahox.mp4"
+                  type="video/mp4">
+              </video>
+              <div
+                class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                <span
+                  class="material-symbols-outlined text-5xl text-white opacity-0 group-hover:opacity-100 transition-opacity">play_arrow</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TESTIMONIALS ───────────────────────────────────────────────────────── -->
+    <section class="py-16 md:py-24 border-y border-[#dddddd]">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12">
+        <div class="text-center mb-12 reveal">
+          <div class="section-kicker justify-center">
+            <div class="section-kicker-line"></div>
+            <span class="section-kicker-text">Testimonials</span>
+            <div class="section-kicker-line"></div>
+          </div>
+          <h2 class="text-3xl md:text-4xl font-sans-serif text-on-surface mt-2">Words from Our Clients</h2>
+        </div>
+        <div class="w-full overflow-hidden relative reveal">
+          <div class="animate-marquee gap-6">
+            <!-- Review 1 -->
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-quote">"Every single detail was perfect — from the packaging to the personal note. Our corporate team absolutely loved it."</p>
+              <div>
+                <p class="testimonial-author">Priya Nair</p>
+                <p class="text-[11px] text-secondary">HR Manager, Pune</p>
+              </div>
+            </div>
+            <!-- Review 2 -->
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-quote">"We ordered 200+ wedding favours and WrappDelights delivered flawlessly. The presentation was stunning."</p>
+              <div>
+                <p class="testimonial-author">Rahul &amp; Sneha Mehta</p>
+                <p class="text-[11px] text-secondary">Pune</p>
+              </div>
+            </div>
+            <!-- Review 3 -->
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-quote">"The custom hamper builder made it so easy to personalise gifts for each team member. Will definitely reorder."</p>
+              <div>
+                <p class="testimonial-author">Aditya Sharma</p>
+                <p class="text-[11px] text-secondary">Founder, Bangalore</p>
+              </div>
+            </div>
+            <!-- Review 4 -->
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-quote">"The packaging was stunning! Every item inside was carefully curated and felt incredibly premium. Highly recommend WrappDelights!"</p>
+              <div>
+                <p class="testimonial-author">Anita Desai</p>
+                <p class="text-[11px] text-secondary">Mumbai</p>
+              </div>
+            </div>
+            <!-- Review 5 -->
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-quote">"We needed 50 customized Diwali hampers on short notice. The team delivered beautifully crafted boxes right on time."</p>
+              <div>
+                <p class="testimonial-author">Sameer Joshi</p>
+                <p class="text-[11px] text-secondary">Director, New Delhi</p>
+              </div>
+            </div>
+            <!-- Review 6 -->
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-quote">"Absolutely delighted with my personalized hamper! The attention to detail and quality of products exceeded my expectations."</p>
+              <div>
+                <p class="testimonial-author">Ritu Gupta</p>
+                <p class="text-[11px] text-secondary">Bangalore</p>
+              </div>
+            </div>
+
+            <!-- DUPLICATED FOR INFINITE LOOP -->
+            <!-- Review 1 -->
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-quote">"Every single detail was perfect — from the packaging to the personal note. Our corporate team absolutely loved it."</p>
+              <div>
+                <p class="testimonial-author">Priya Nair</p>
+                <p class="text-[11px] text-secondary">HR Manager, Pune</p>
+              </div>
+            </div>
+            <!-- Review 2 -->
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-quote">"We ordered 200+ wedding favours and WrappDelights delivered flawlessly. The presentation was stunning."</p>
+              <div>
+                <p class="testimonial-author">Rahul &amp; Sneha Mehta</p>
+                <p class="text-[11px] text-secondary">Pune</p>
+              </div>
+            </div>
+            <!-- Review 3 -->
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-quote">"The custom hamper builder made it so easy to personalise gifts for each team member. Will definitely reorder."</p>
+              <div>
+                <p class="testimonial-author">Aditya Sharma</p>
+                <p class="text-[11px] text-secondary">Founder, Bangalore</p>
+              </div>
+            </div>
+            <!-- Review 4 -->
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-quote">"The packaging was stunning! Every item inside was carefully curated and felt incredibly premium. Highly recommend WrappDelights!"</p>
+              <div>
+                <p class="testimonial-author">Anita Desai</p>
+                <p class="text-[11px] text-secondary">Mumbai</p>
+              </div>
+            </div>
+            <!-- Review 5 -->
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-quote">"We needed 50 customized Diwali hampers on short notice. The team delivered beautifully crafted boxes right on time."</p>
+              <div>
+                <p class="testimonial-author">Sameer Joshi</p>
+                <p class="text-[11px] text-secondary">Director, New Delhi</p>
+              </div>
+            </div>
+            <!-- Review 6 -->
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-quote">"Absolutely delighted with my personalized hamper! The attention to detail and quality of products exceeded my expectations."</p>
+              <div>
+                <p class="testimonial-author">Ritu Gupta</p>
+                <p class="text-[11px] text-secondary">Bangalore</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      // All 9 video sources
+      const allVideoSources = [
+        "https://res.cloudinary.com/dwti6e55r/video/upload/v1778234370/Video_by_wrappdelights_DVDhPVlkf2p_qyb3bl.mp4",
+        "https://res.cloudinary.com/dwti6e55r/video/upload/v1778234371/Video_by_wrappdelights_DU45Nr6DNRJ_hjdugu.mp4",
+        "https://res.cloudinary.com/dwti6e55r/video/upload/v1778234371/Video_by_wrappdelights_DU6HmtjE-ms_bpahox.mp4",
+        "https://res.cloudinary.com/dwti6e55r/video/upload/v1778234374/Video_by_wrappdelights_DVMM8fikxyc_mxoa54.mp4",
+        "https://res.cloudinary.com/dwti6e55r/video/upload/v1778234376/Video_by_wrappdelights_DVEZ-4yE8d7_snqway.mp4",
+        "https://res.cloudinary.com/dwti6e55r/video/upload/v1778255328/Video_by_wrappdelights_DPTx7m2E5KC_sthkzg.mp4",
+        "https://res.cloudinary.com/dwti6e55r/video/upload/v1778255330/Video_by_wrappdelights_DUbEUVkjFP2_qh7qrx.mp4",
+        "https://res.cloudinary.com/dwti6e55r/video/upload/v1778255330/Video_by_wrappdelights_DU83va6E9Pz_zvoxlw.mp4",
+        "https://res.cloudinary.com/dwti6e55r/video/upload/v1778255330/Video_by_wrappdelights_DUDL4AwkVD2_plaejy.mp4"
+      ];
+
+      let largeVideoIndex = 0;
+      let rightVideoIndex1 = 1;
+      let rightVideoIndex2 = 2;
+
+      function updateLargeVideo() {
+        const largeVideo = document.getElementById('largeVideo');
+        const counter = document.getElementById('videoCounter');
+        largeVideo.src = allVideoSources[largeVideoIndex];
+        counter.textContent = largeVideoIndex + 1;
+        largeVideo.load();
+        largeVideo.play();
+        largeVideoIndex = (largeVideoIndex + 1) % allVideoSources.length;
+      }
+
+      function updateRightVideo1() {
+        const rightVideo1 = document.getElementById('rightVideo1');
+        rightVideo1.src = allVideoSources[rightVideoIndex1];
+        rightVideo1.load();
+        rightVideo1.play();
+        rightVideoIndex1 = (rightVideoIndex1 + 1) % allVideoSources.length;
+      }
+
+      function updateRightVideo2() {
+        const rightVideo2 = document.getElementById('rightVideo2');
+        rightVideo2.src = allVideoSources[rightVideoIndex2];
+        rightVideo2.load();
+        rightVideo2.play();
+        rightVideoIndex2 = (rightVideoIndex2 + 1) % allVideoSources.length;
+      }
+
+      // Rotate large video every 6 seconds
+      setInterval(updateLargeVideo, 6000);
+
+      // Rotate right video 1 every 5 seconds
+      setInterval(updateRightVideo1, 5000);
+
+      // Rotate right video 2 every 5.5 seconds
+      setInterval(updateRightVideo2, 5500);
+
+      // Auto-play on scroll into view
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const video = entry.target;
+            video.play();
+          }
         });
-      };
-      const next  = () => activate((current + 1) % slides.length);
-      const start = () => { timer = setInterval(next, 4500); };
-      const stop  = () => { clearInterval(timer); };
-      dots.forEach((d, i) => d.addEventListener('click', () => { stop(); activate(i); start(); }));
-      activate(0); start();
-    }
-
-    /* Best sellers carousel */
-    const track = document.getElementById('carouselTrack');
-    const prev  = document.getElementById('carouselPrev');
-    const next2 = document.getElementById('carouselNext');
-    if (track && prev && next2) {
-      const STEP = 290;
-      prev.addEventListener('click', () => track.scrollBy({ left: -STEP, behavior: 'smooth' }));
-      next2.addEventListener('click', () => track.scrollBy({ left:  STEP, behavior: 'smooth' }));
-    }
-
-    /* Scroll reveal */
-    const reveals = document.querySelectorAll('.reveal');
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
       });
-    }, { threshold: 0.1 });
-    reveals.forEach(el => io.observe(el));
-  })();
-</script>
-{% endblock %}
+
+      document.querySelectorAll('video').forEach(video => observer.observe(video));
+    </script>
+
+    <!-- ── CORPORATE CTA BANNER ───────────────────────────────────────────────── -->
+    <section class="py-16 md:py-24">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12 reveal">
+        <div class="corp-banner p-10 md:p-14 flex flex-col md:flex-row items-center gap-8 justify-between">
+          <div>
+            <div class="section-kicker">
+              <div class="section-kicker-line"></div>
+              <span class="section-kicker-text">For Enterprises</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-sans-serif text-on-surface mt-1 mb-3">Bulk Corporate Gifting?</h2>
+            <p class="text-secondary text-[15px] max-w-md leading-relaxed">From Diwali gifts to employee welcome kits —
+              we handle bulk orders with custom branding. Get a quote within 24 hours.</p>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+            <a href="tel:+919309810348"
+              class="inline-flex items-center gap-2 px-7 py-4 bg-primary text-white rounded-xl font-bold text-sm uppercase tracking-widest hover:bg-on-primary-fixed-variant transition-all active:scale-95">
+              <span class="material-symbols-outlined text-base">call</span>
+              Call Us
+            </a>
+            <a href="https://wa.me/919309810348?text=Hi%2C%20I%27d%20like%20to%20explore%20bulk%20gifting."
+              target="_blank" rel="noopener"
+              class="inline-flex items-center gap-2 px-7 py-4 bg-white border-2 border-outline-variant text-on-surface rounded-xl font-bold text-sm uppercase tracking-widest hover:border-[#25D366] hover:text-[#25D366] transition-all active:scale-95">
+              <span class="material-symbols-outlined text-base">chat</span>
+              WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Include consistent footer across all pages -->
+  {% include 'partials/footer.html' %}
+
+  <!-- WHATSAPP FLOAT -->
+  <a class="wa-float" href="https://wa.me/919309810348?text=Hi%2C%20I%20want%20to%20explore%20bulk%20gifting%20options."
+    target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24" xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true">
+      <path
+        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+    </svg>
+  </a>
+
+  <script>
+    (() => {
+      'use strict';
+
+      /* ─── IMAGE CAROUSEL ─── */
+      const track = document.getElementById('imgCarouselTrack');
+      const dotsEl = document.getElementById('imgDots');
+      const slides = track ? Array.from(track.querySelectorAll('.img-carousel-slide')) : [];
+      const TOTAL = slides.length;
+      let current = 0;
+      let autoTimer;
+
+      if (TOTAL && dotsEl) {
+        slides.forEach((_, i) => {
+          const btn = document.createElement('button');
+          btn.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+          btn.setAttribute('role', 'tab');
+          btn.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+          btn.addEventListener('click', () => { goTo(i); resetTimer(); });
+          dotsEl.appendChild(btn);
+        });
+
+        function goTo(n) {
+          slides[current].classList.remove('is-active');
+          current = (n + TOTAL) % TOTAL;
+          slides[current].classList.add('is-active');
+          track.style.transform = 'translateX(-' + (current * 100) + '%)';
+          dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => {
+            d.classList.toggle('active', i === current);
+          });
+        }
+
+        function resetTimer() {
+          clearInterval(autoTimer);
+          autoTimer = setInterval(() => goTo(current + 1), 5500);
+        }
+
+        document.getElementById('imgPrev').addEventListener('click', () => { goTo(current - 1); resetTimer(); });
+        document.getElementById('imgNext').addEventListener('click', () => { goTo(current + 1); resetTimer(); });
+
+        let touchStartX = 0;
+        track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+        track.addEventListener('touchend', e => {
+          const dx = e.changedTouches[0].clientX - touchStartX;
+          if (Math.abs(dx) > 50) { goTo(dx < 0 ? current + 1 : current - 1); resetTimer(); }
+        }, { passive: true });
+
+        resetTimer();
+      }
+
+      /* ─── BEST SELLERS CAROUSEL ─── */
+      const bsTrack = document.getElementById('carouselTrack');
+      const bsPrev = document.getElementById('carouselPrev');
+      const bsNext = document.getElementById('carouselNext');
+      if (bsTrack && bsPrev && bsNext) {
+        const STEP = 290;
+        bsPrev.addEventListener('click', () => bsTrack.scrollBy({ left: -STEP, behavior: 'smooth' }));
+        bsNext.addEventListener('click', () => bsTrack.scrollBy({ left: STEP, behavior: 'smooth' }));
+      }
+
+      /* ─── HEADER SCROLL ─── */
+      const header = document.getElementById('siteHeader');
+      if (header) {
+        window.addEventListener('scroll', () => {
+          header.classList.toggle('scrolled', window.scrollY > 10);
+        }, { passive: true });
+      }
+
+      /* ─── MOBILE MENU ─── */
+      const menuBtn = document.getElementById('mobileMenuToggle');
+      const menuIcon = document.getElementById('mobileMenuIcon');
+      const menu = document.getElementById('mobileMenu');
+      if (menuBtn && menu) {
+        menuBtn.addEventListener('click', () => {
+          const isOpen = menu.classList.toggle('hidden') === false;
+          menuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          if (menuIcon) menuIcon.textContent = isOpen ? 'close' : 'menu';
+        });
+        window.addEventListener('resize', () => {
+          if (window.innerWidth >= 768 && !menu.classList.contains('hidden')) {
+            menu.classList.add('hidden');
+            menuBtn.setAttribute('aria-expanded', 'false');
+            if (menuIcon) menuIcon.textContent = 'menu';
+          }
+        });
+      }
+
+      /* ─── SCROLL REVEAL ─── */
+      const reveals = document.querySelectorAll('.reveal');
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.08 });
+      reveals.forEach(el => io.observe(el));
+
+      /* ─── FAVORITES ─── */
+      const FAVORITES_ENDPOINT = '{% url "toggle_favorite" %}';
+      const FAVORITE_STATE = new Set((document.body.dataset.favoriteIds || '').split(',').filter(Boolean));
+
+      function setFavoritesCount(count) {
+        const countBadge = document.getElementById('favoritesCount');
+        const favBtn = document.getElementById('favoritesBtn');
+        document.body.dataset.favoritesCount = String(count);
+        if (!countBadge || !favBtn) return;
+
+        if (count > 0) {
+          countBadge.textContent = count;
+          countBadge.style.display = 'flex';
+          favBtn.classList.add('has-favorites');
+        } else {
+          countBadge.style.display = 'none';
+          favBtn.classList.remove('has-favorites');
+        }
+      }
+
+      function setFavoriteButtonState(btn, isFavorited) {
+        btn.classList.toggle('favorited', isFavorited);
+        btn.setAttribute('aria-pressed', isFavorited ? 'true' : 'false');
+        const icon = btn.querySelector('.material-symbols-outlined');
+        if (icon) {
+          icon.style.fontVariationSettings = isFavorited
+            ? "'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24"
+            : "'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24";
+        }
+      }
+
+      function syncFavoriteButtons(productId, isFavorited) {
+        document.querySelectorAll(`[data-hamper-id="${productId}"], [data-product-id="${productId}"]`).forEach(btn => {
+          setFavoriteButtonState(btn, isFavorited);
+        });
+      }
+
+      function bindFavoriteButtons() {
+        document.querySelectorAll('.category-product-wishlist:not([data-favorites-bound]), .favorite-toggle:not([data-favorites-bound])').forEach(btn => {
+          const productId = btn.getAttribute('data-hamper-id') || btn.getAttribute('data-product-id');
+          if (!productId) return;
+
+          btn.setAttribute('data-favorites-bound', 'true');
+          setFavoriteButtonState(btn, FAVORITE_STATE.has(String(productId)));
+
+          btn.addEventListener('click', async (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            try {
+              const response = await fetch(FAVORITES_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ hamper_id: parseInt(productId, 10) }),
+              });
+
+              const data = await response.json();
+              if (!response.ok || !data.success) return;
+
+              if (data.is_favorited) {
+                FAVORITE_STATE.add(String(productId));
+              } else {
+                FAVORITE_STATE.delete(String(productId));
+              }
+
+              setFavoritesCount(data.count ?? FAVORITE_STATE.size);
+              syncFavoriteButtons(String(productId), data.is_favorited);
+            } catch (error) {
+              console.error('Favorite error:', error);
+            }
+          });
+        });
+      }
+
+      setFavoritesCount(Number(document.body.dataset.favoritesCount || FAVORITE_STATE.size || 0));
+      bindFavoriteButtons();
+
+      const favoriteObserver = new MutationObserver(() => {
+        bindFavoriteButtons();
+      });
+      favoriteObserver.observe(document.body, { childList: true, subtree: true });
+
+    })();
+  </script>
+
+</body>
+
+</html>
