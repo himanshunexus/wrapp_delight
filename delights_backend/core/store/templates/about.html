@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% block nav_about %}text-[#570012] border-b-2 border-[#570012] font-bold{% endblock %}
+{% block title %}About Us — WrappDelights{% endblock %}
+
+{% block extra_css %}
+<style>
+  .about-shell {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-shell::before,
+  .about-shell::after {
+    content: '';
+    position: absolute;
+    border-radius: 999px;
+    pointer-events: none;
+    filter: blur(40px);
+    opacity: 0.55;
+  }
+
+  .about-shell::before {
+    width: 24rem;
+    height: 24rem;
+    right: -9rem;
+    top: 2rem;
+    background: radial-gradient(circle, rgba(175,16,26,0.16) 0%, rgba(175,16,26,0.03) 58%, transparent 72%);
+  }
+
+  .about-shell::after {
+    width: 18rem;
+    height: 18rem;
+    left: -6rem;
+    bottom: 4rem;
+    background: radial-gradient(circle, rgba(255,179,172,0.34) 0%, rgba(255,179,172,0.08) 54%, transparent 72%);
+  }
+
+  .about-card {
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(228,190,186,0.55);
+    box-shadow: 0 18px 48px rgba(128, 1, 31, 0.08);
+  }
+
+  .about-stat {
+    border: 1px solid rgba(228,190,186,0.45);
+    background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(253,247,247,0.92));
+  }
+
+  .about-step {
+    position: relative;
+    padding-left: 1.15rem;
+  }
+
+  .about-step::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.45rem;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 999px;
+    background: #af101a;
+    box-shadow: 0 0 0 4px rgba(175,16,26,0.08);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="about-shell py-12 md:py-16">
+  <div class="w-full mx-auto px-3 md:px-6">
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1.08fr_0.92fr] gap-8 lg:gap-10 items-stretch">
+      <div class="about-card relative overflow-hidden p-6 md:p-8 lg:p-10">
+        <div class="relative z-10 max-w-2xl space-y-6">
+          <div class="flex flex-wrap items-center gap-3">
+            <p class="wd-kicker text-primary">About WrappDelights</p>
+            <span class="text-[10px] font-bold uppercase tracking-[0.18em] text-outline px-3 py-1 bg-primary-fixed/50 border border-outline-variant/40">Premium gifting studio</span>
+          </div>
+          <h1 class="text-4xl md:text-[3.9rem] leading-[0.98] font-black tracking-tight text-on-surface max-w-3xl">
+            Gifting that feels editorial, effortless, and built for real business moments.
+          </h1>
+          <p class="text-sm md:text-base leading-7 text-on-surface-variant max-w-2xl">
+            WrappDelights curates premium hampers for weddings, employee welcome kits, and corporate gifting moments.
+            The experience is designed to feel polished from first click to delivery, with thoughtful curation, clear communication, and a finish that looks considered.
+          </p>
+          <div class="flex flex-wrap gap-3 pt-1">
+            <a href="{% url 'products' %}" class="wd-btn wd-btn-primary px-5 py-3">Browse Collections</a>
+            <a href="{% url 'custom_hamper' %}" class="wd-btn wd-btn-outline px-5 py-3">Build a Hamper</a>
+            <a href="{% url 'corporate' %}" class="wd-btn px-5 py-3" style="background:#f6ecec;color:#570012;border:1px solid #e5caca;">Corporate Inquiry</a>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+            <div class="about-stat p-4 md:p-5">
+              <div class="text-2xl md:text-3xl font-black text-primary">3</div>
+              <p class="mt-2 text-[11px] font-bold uppercase tracking-[0.14em] text-outline">Core collections</p>
+              <p class="mt-1 text-xs leading-6 text-on-surface-variant">Wedding, employee, corporate.</p>
+            </div>
+            <div class="about-stat p-4 md:p-5">
+              <div class="text-2xl md:text-3xl font-black text-primary">24h</div>
+              <p class="mt-2 text-[11px] font-bold uppercase tracking-[0.14em] text-outline">Quick response</p>
+              <p class="mt-1 text-xs leading-6 text-on-surface-variant">Fast quote and support loop.</p>
+            </div>
+            <div class="about-stat p-4 md:p-5">
+              <div class="text-2xl md:text-3xl font-black text-primary">Pune</div>
+              <p class="mt-2 text-[11px] font-bold uppercase tracking-[0.14em] text-outline">Based in</p>
+              <p class="mt-1 text-xs leading-6 text-on-surface-variant">Built for local and pan-city gifting.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="about-card p-5 md:p-6">
+          <div class="wd-kicker text-primary mb-3">What we do</div>
+          <p class="text-sm leading-7 text-on-surface-variant">
+            We create gifting experiences for teams, clients, and celebrations. From curated catalog picks to fully custom hampers, every order is built to look intentional and arrive ready to impress.
+          </p>
+        </div>
+        <div class="about-card p-5 md:p-6">
+          <div class="wd-kicker text-primary mb-3">How we work</div>
+          <p class="text-sm leading-7 text-on-surface-variant">
+            Explore collections, shortlist products, and reach out when the order needs branding, quantity planning, or delivery coordination.
+          </p>
+        </div>
+        <div class="about-card p-5 md:p-6">
+          <div class="wd-kicker text-primary mb-3">Our promise</div>
+          <p class="text-sm leading-7 text-on-surface-variant">
+            Clear communication, neat presentation, and a calm buying experience. Reliability comes first so you can send gifts without friction.
+          </p>
+        </div>
+        <div class="about-card p-5 md:p-6">
+          <div class="wd-kicker text-primary mb-3">Based in Pune</div>
+          <p class="text-sm leading-7 text-on-surface-variant">
+            We operate from Pune and support gifting orders across occasions and business needs with a service-first approach.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 md:mt-10 grid grid-cols-1 lg:grid-cols-[0.92fr_1.08fr] gap-8">
+      <div class="about-card bg-primary text-on-primary p-6 md:p-8 lg:p-10 overflow-hidden relative">
+        <div class="absolute inset-0 opacity-15" style="background-image: radial-gradient(circle at 20% 20%, #fff 0, transparent 28%), radial-gradient(circle at 80% 0%, #fff 0, transparent 22%), radial-gradient(circle at 100% 100%, #fff 0, transparent 26%);"></div>
+        <div class="relative z-10 space-y-5">
+          <p class="text-[10px] font-bold tracking-[0.18em] uppercase text-on-primary/80">Why customers return</p>
+          <h2 class="text-3xl md:text-[2.75rem] leading-[1.02] font-black max-w-md">We make bulk gifting feel curated, not transactional.</h2>
+          <p class="text-sm md:text-base leading-7 text-on-primary/90 max-w-xl">
+            The page, the packaging, and the support all point to the same idea: gifting should be easy to approve and enjoyable to receive.
+          </p>
+          <div class="grid grid-cols-2 gap-3 pt-2 max-w-lg">
+            <div class="bg-white/12 border border-white/15 p-4">
+              <div class="text-xl font-black">Design-led</div>
+              <p class="text-[11px] leading-5 text-on-primary/85 mt-1">Presentation first, every time.</p>
+            </div>
+            <div class="bg-white/12 border border-white/15 p-4">
+              <div class="text-xl font-black">Fast support</div>
+              <p class="text-[11px] leading-5 text-on-primary/85 mt-1">Quick replies on WhatsApp.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="about-card about-step p-5 md:p-6">
+          <div class="text-3xl md:text-4xl font-black text-primary">1</div>
+          <p class="mt-2 text-sm font-bold text-on-surface">Explore</p>
+          <p class="mt-1 text-xs leading-6 text-on-surface-variant">Start with ready-made gifting collections.</p>
+        </div>
+        <div class="about-card about-step p-5 md:p-6">
+          <div class="text-3xl md:text-4xl font-black text-primary">2</div>
+          <p class="mt-2 text-sm font-bold text-on-surface">Customize</p>
+          <p class="mt-1 text-xs leading-6 text-on-surface-variant">Adjust for branding, quantity, and occasion.</p>
+        </div>
+        <div class="about-card about-step p-5 md:p-6">
+          <div class="text-3xl md:text-4xl font-black text-primary">3</div>
+          <p class="mt-2 text-sm font-bold text-on-surface">Send</p>
+          <p class="mt-1 text-xs leading-6 text-on-surface-variant">Deliver a polished gift that lands well.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 md:mt-10 about-card p-6 md:p-8 lg:p-10">
+      <div class="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-6 lg:gap-10 items-start">
+        <div>
+          <p class="wd-kicker text-primary mb-3">Built for production use</p>
+          <h3 class="text-2xl md:text-3xl font-black text-on-surface leading-tight max-w-lg">
+            The site should feel like a premium catalog, not a placeholder brochure.
+          </h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="about-step">
+            <p class="text-sm font-bold text-on-surface">Clear hierarchy</p>
+            <p class="text-xs leading-6 text-on-surface-variant mt-1">Strong headline, concise proof points, and action buttons that read naturally.</p>
+          </div>
+          <div class="about-step">
+            <p class="text-sm font-bold text-on-surface">Polished surfaces</p>
+            <p class="text-xs leading-6 text-on-surface-variant mt-1">Soft glass, stronger shadows, and controlled accents instead of flat cards.</p>
+          </div>
+          <div class="about-step">
+            <p class="text-sm font-bold text-on-surface">Conversion ready</p>
+            <p class="text-xs leading-6 text-on-surface-variant mt-1">Every CTA leads to products, custom hampers, or inquiry flow.</p>
+          </div>
+          <div class="about-step">
+            <p class="text-sm font-bold text-on-surface">Fast contact path</p>
+            <p class="text-xs leading-6 text-on-surface-variant mt-1">WhatsApp opens automatically after submit, then falls back to the visible contact button.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

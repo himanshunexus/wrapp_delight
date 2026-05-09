@@ -245,6 +245,50 @@
     color: #af101a;
   }
 
+  .wd-gift-toggle {
+    display: none;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid #dfc5c2;
+    border-radius: 12px;
+    background: #fff;
+    padding: 5px;
+    box-shadow: 0 3px 10px rgba(128, 1, 31, 0.08);
+  }
+
+  .wd-gift-toggle-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 4px;
+    padding: 9px 15px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #4a3431;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .wd-gift-toggle-link:hover {
+    color: #af101a;
+    background: #fdf1f1;
+  }
+
+  .wd-gift-toggle-link.active {
+    background: #af101a;
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(175, 16, 26, 0.28);
+  }
+
+  .wd-gift-toggle-link:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(175, 16, 26, 0.22);
+  }
+
   /* Cart icon — secondary, unobtrusive */
   .wd-cart-btn {
     position: relative;
@@ -356,6 +400,12 @@
     }
   }
 
+  @media (min-width: 768px) {
+    .wd-gift-toggle {
+      display: inline-flex;
+    }
+  }
+
   .wd-mobile-toggle:hover {
     color: #af101a;
   }
@@ -434,20 +484,26 @@
 
   <nav class="flex flex-col w-full max-w-7xl mx-auto px-6 md:px-12 py-3 gap-2 md:gap-4" aria-label="Main navigation">
 
-    <!-- Top Row: Logo Centered, Actions Right -->
-    <div class="flex items-center justify-between w-full h-[60px]">
+    <!-- Top Row: Actions Left, Logo Centered, Search Right -->
+    <div class="grid grid-cols-[1fr_auto_1fr] items-center w-full h-[60px] gap-4 md:gap-6">
 
-      <!-- Left: Mobile Menu Toggle -->
-      <div class="flex-1 flex justify-start items-center">
-        <!-- Mobile toggle -->
+      <!-- Left: Mobile Toggle + Gift Type Toggle -->
+      <div class="flex items-center justify-start gap-1.5 md:gap-2 justify-self-start pr-0 md:pr-1">
         <button type="button" id="mobileMenuToggle" class="wd-mobile-toggle md:hidden" aria-expanded="false"
           aria-controls="mobileMenu" aria-label="Toggle navigation">
           <span class="material-symbols-outlined" style="font-size:22px;" id="mobileMenuIcon">menu</span>
         </button>
+
+        {% if request.path == '/' or request.path == '/home/' %}
+        <div class="wd-gift-toggle" aria-label="Choose gift type">
+          <a href="/comming-soon" class="wd-gift-toggle-link {% if request.GET.category != 'corporate' and '/corporate/' not in request.path %}active{% endif %}">Individual Gifts</a>
+          <a href="http://127.0.0.1:8000/products/?category=corporate" class="wd-gift-toggle-link {% if request.GET.category == 'corporate' or '/corporate/' in request.path %}active{% endif %}">Corporate Gifts</a>
+        </div>
+        {% endif %}
       </div>
 
       <!-- Center: Logo -->
-      <div class="flex-shrink-0 flex justify-center items-center">
+      <div class="flex justify-center items-center justify-self-center">
         <a href="{% url 'home' %}" class="wd-logo" aria-label="WrappDelights home">
           <span class="wd-logo-gift" aria-hidden="true">
             <span class="material-symbols-outlined">redeem</span>
@@ -456,18 +512,24 @@
         </a>
       </div>
 
-      <!-- Right: Search + Cart + Favorites -->
-      <div class="flex-1 flex justify-end items-center gap-2">
+      <!-- Right: Search + Favorites + Cart -->
+      <div class="flex items-center justify-end justify-self-end pl-0 md:pl-1 w-full gap-2.5 md:gap-3">
+        <form action="{% url 'search' %}" method="get" class="hidden md:flex items-center w-auto max-w-[280px] shrink-0">
+          <label class="wd-search-pill" aria-label="Search products">
+            <input type="search" name="q" placeholder="Search gifts…" value="{{ request.GET.q|default:'' }}">
+            <button type="submit" aria-label="Search">
+              <span class="material-symbols-outlined" style="font-size:19px;">search</span>
+            </button>
+          </label>
+        </form>
 
-
-        <a href="{% url 'favorites' %}" id="favoritesBtn" class="wd-favorites-btn" aria-label="View favorites">
+        <a href="{% url 'favorites' %}" id="favoritesBtn" class="wd-favorites-btn hidden md:flex" aria-label="View favorites">
           <span class="material-symbols-outlined" style="font-size:21px;">favorite</span>
           <span class="wd-cart-count {% if not favorites_count %}hidden{% endif %}" id="favoritesCount">{{ favorites_count|default:0 }}</span>
         </a>
 
-        <!-- Cart -->
         {% with kit_count=request.session.kit|length %}
-        <a href="{% url 'custom_hamper_review' %}" class="wd-cart-btn" aria-label="View hamper kit">
+        <a href="{% url 'custom_hamper_review' %}" class="wd-cart-btn hidden md:flex" aria-label="View hamper kit">
           <span class="material-symbols-outlined" style="font-size:21px;">shopping_bag</span>
           {% if kit_count %}
           <span class="wd-cart-count">{{ kit_count }}</span>
@@ -577,6 +639,13 @@
           </a>
         </li>
 
+        <!-- About -->
+        <li>
+          <a href="{% url 'about' %}" class="wd-nav-link {% block nav_about %}{% endblock %}">
+            About Us
+          </a>
+        </li>
+
         <!-- Build Hamper CTA -->
         <li>
           <a href="{% url 'custom_hamper' %}" class="wd-nav-cta ml-2 {% block nav_hamper %}{% endblock %}">
@@ -618,6 +687,11 @@
         <span class="material-symbols-outlined"
           style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">inventory_2</span>
         All Gifts
+      </a>
+      <a href="{% url 'about' %}" class="wd-mobile-link">
+        <span class="material-symbols-outlined"
+          style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">info</span>
+        About Us
       </a>
       <a href="{% url 'custom_hamper' %}" class="wd-mobile-link">
         <span class="material-symbols-outlined"

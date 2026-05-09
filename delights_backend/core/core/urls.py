@@ -35,6 +35,10 @@ from delights_backend.core.store.views import (
     dashboard_sections,
     dashboard_toggle_product,
     health,
+    robots_txt,
+    sitemap_xml,
+    about,
+    coming_soon,
     home,
     product_detail,
     product_list,
@@ -55,10 +59,15 @@ admin.site.index_title = "Dashboard"
 urlpatterns = [
     path(settings.ADMIN_PANEL_PATH, admin.site.urls),
     path("health/", health, name="health"),
+    path("robots.txt", robots_txt, name="robots_txt"),
+    path("sitemap.xml", sitemap_xml, name="sitemap_xml"),
 
     # Public catalog flow
     path("", home, name="home"),
     path("home/", home, name="home_alt"),
+    path("about/", about, name="about"),
+    path("comming-soon/", coming_soon, name="comming_soon"),
+    path("coming-soon/", coming_soon, name="coming_soon"),
     path("products/", product_list, name="products"),
     path("products/<int:product_id>/", product_detail, name="product_detail"),
     path("corporate/", corporate, name="corporate"),

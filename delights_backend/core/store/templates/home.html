@@ -7,6 +7,12 @@
   <title>WrappDelights | Curated Gifts, Made Effortless</title>
   <link rel="icon" type="image/svg+xml"
     href="https://cdn.jsdelivr.net/gh/Aditya-bachhav/WrappDelights@main/delights_backend/core/media/logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1608755728617-aefab37d2edd?auto=format&fit=crop&w=960&q=70"
+    imagesrcset="https://images.unsplash.com/photo-1608755728617-aefab37d2edd?auto=format&fit=crop&w=640&q=70 640w, https://images.unsplash.com/photo-1608755728617-aefab37d2edd?auto=format&fit=crop&w=960&q=70 960w, https://images.unsplash.com/photo-1608755728617-aefab37d2edd?auto=format&fit=crop&w=1365&q=72 1365w"
+    imagesizes="100vw" fetchpriority="high" />
 
   <!-- Fonts & Icons -->
   <link
@@ -1085,6 +1091,13 @@
       transform: none;
     }
 
+    /* Performance: don't layout/paint all below-the-fold sections upfront */
+    main > section:not(.img-carousel),
+    main > .marquee-strip {
+      content-visibility: auto;
+      contain-intrinsic-size: 1px 900px;
+    }
+
     .home-fit-image {
       width: 100%;
       height: 100%;
@@ -1163,8 +1176,10 @@
         <!-- Slide 1 · Hero — luxury gift hamper flatlay -->
         <div class="img-carousel-slide is-active" role="img" aria-label="Luxury curated gift hampers">
           <img
-            src="https://images.unsplash.com/photo-1608755728617-aefab37d2edd?q=90&w=2560&auto=format&fit=crop&ixlib=rb-4.1.0"
-            alt="Luxury curated gift hampers" loading="eager" fetchpriority="high" style="object-position: center 30%;">
+            src="https://images.unsplash.com/photo-1608755728617-aefab37d2edd?auto=format&fit=crop&w=1365&q=72"
+            srcset="https://images.unsplash.com/photo-1608755728617-aefab37d2edd?auto=format&fit=crop&w=640&q=70 640w, https://images.unsplash.com/photo-1608755728617-aefab37d2edd?auto=format&fit=crop&w=960&q=70 960w, https://images.unsplash.com/photo-1608755728617-aefab37d2edd?auto=format&fit=crop&w=1365&q=72 1365w"
+            sizes="100vw"
+            alt="Luxury curated gift hampers" loading="eager" fetchpriority="high" decoding="async" style="object-position: center 30%;">
           <div class="slide-caption">
             <p class="slide-caption-tag">
               <span class="material-symbols-outlined"
@@ -1411,8 +1426,7 @@
               <div class="category-product-info">
                 <p class="category-product-name">{{ product.name }}</p>
                 <p class="category-product-category">{{ product.category.name }}</p>
-                <p class="category-product-price">₹{% if product.base_price %}{{ product.base_price|floatformat:0 }}{%
-                  else %}{{ product.price_label }}{% endif %}</p>
+                <p class="category-product-price">₹{% if product.base_price %}{{ product.base_price|floatformat:0 }}{% else %}{{ product.price_label }}{% endif %}</p>
               </div>
             </div>
             {% empty %}
@@ -1601,9 +1615,7 @@
               <span class="product-card-quick">View Product →</span>
             </a>
             <div class="p-4 flex flex-col gap-2 flex-1">
-              <a href="{% url 'product_detail' product.id %}"
-                class="font-sans-serif text-[15px] text-on-surface leading-snug hover:text-primary transition-colors min-h-[2.8rem]">{{
-                product.name }}</a>
+              <a href="{% url 'product_detail' product.id %}" class="font-sans-serif text-[15px] text-on-surface leading-snug hover:text-primary transition-colors min-h-[2.8rem]">{{ product.name }}</a>
               <div class="flex items-center justify-between mt-auto pt-2">
                 {% if product.base_price %}
                 <span class="text-primary font-bold text-base">₹{{ product.base_price|floatformat:0 }}</span>

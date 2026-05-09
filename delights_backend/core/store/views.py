@@ -15,7 +15,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from delights_backend.core.store import models
 from .models import Category, CorporateInquiry, Hamper, HamperImage, HomepageSection, Favorite
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST, require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 
@@ -301,9 +301,47 @@ def health(request):
             "error": str(e)
         }, status=503)
 
+
+def robots_txt(request):
+    lines = [
+        "User-agent: *",
+        "Allow: /",
+        "Disallow: /dashboard/",
+        f"Sitemap: {settings.SITE_BASE_URL.rstrip('/')}/sitemap.xml",
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")
+
+
+def sitemap_xml(request):
+    base_url = settings.SITE_BASE_URL.rstrip("/")
+    urls = [
+        f"{base_url}/",
+        f"{base_url}/home/",
+        f"{base_url}/about/",
+        f"{base_url}/products/",
+        f"{base_url}/corporate/",
+        f"{base_url}/custom-hamper/",
+        f"{base_url}/coming-soon/",
+    ]
+    body = [
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ]
+    body.extend([f"  <url><loc>{url}</loc></url>" for url in urls])
+    body.append("</urlset>")
+    return HttpResponse("\n".join(body), content_type="application/xml")
+
 def page_not_found(request, exception=None):
     """Handle 404 errors with a custom page."""
     return render(request, "404.html", status=404)
+
+
+def about(request):
+    return render(request, "about.html")
+
+
+def coming_soon(request):
+    return render(request, "coming_soon.html")
 
 def _selected_products_from_inquiry(inquiry):
     combined = "\n".join(
@@ -404,7 +442,7 @@ def corporate(request):
             customization_details=customization_details,
         )
 
-        return redirect(f"{reverse('corporate_success')}?inquiry={inquiry.id}")
+        return redirect(f"{reverse('corporate_success')}?inquiry={inquiry.id}&auto_whatsapp=1")
 
     return render(
         request,
@@ -732,7 +770,7 @@ def custom_hamper_review(request):
         )
 
         _clear_session_kit(request)
-        return redirect(f"{reverse('corporate_success')}?inquiry={inquiry.id}")
+        return redirect(f"{reverse('corporate_success')}?inquiry={inquiry.id}&auto_whatsapp=1")
 
     return render(
         request,

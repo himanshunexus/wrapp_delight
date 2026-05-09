@@ -72,6 +72,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -249,12 +250,21 @@ WHATSAPP_NUMBER = os.getenv("WHATSAPP_NUMBER", "9309810348")
 WHATSAPP_MESSAGE = os.getenv("WHATSAPP_MESSAGE", "Hi, I'm interested in a product from Wrapp Delights!")
 PHONE_NUMBER = os.getenv("PHONE_NUMBER", "+91 93098 10348")  # display-friendly format
 PHONE_NUMBER_RAW = os.getenv("PHONE_NUMBER_RAW", "+919309810348")  # tel: link format
+SITE_BASE_URL = os.getenv(
+    "SITE_BASE_URL",
+    f"https://{RENDER_EXTERNAL_HOSTNAME}" if RENDER_EXTERNAL_HOSTNAME else "http://127.0.0.1:8000",
+)
 
 if not DEBUG and RUNNING_ON_RENDER:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 
 # Logging configuration
 LOGGING = {

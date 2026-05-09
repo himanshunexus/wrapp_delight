@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Coming Soon — WrappDelights{% endblock %}
+
+{% block content %}
+<section class="py-16 md:py-24">
+  <div class="w-full max-w-4xl mx-auto px-3 md:px-6">
+    <div class="border border-outline-variant/50 bg-white/90 shadow-[0_24px_70px_rgba(128,1,31,0.08)] p-8 md:p-12 text-center">
+      <p class="wd-kicker text-primary mb-4">WrappDelights</p>
+      <h1 class="text-4xl md:text-5xl font-black tracking-tight text-on-surface mb-4">Coming Soon</h1>
+      <p class="text-sm md:text-base text-on-surface-variant leading-7 max-w-2xl mx-auto mb-8">
+        We are preparing a dedicated individual gifting experience. It will be live shortly with curated selections and a faster checkout flow.
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <a href="{% url 'products' %}" class="wd-btn wd-btn-primary px-5 py-3">Explore Current Catalog</a>
+        <a href="http://127.0.0.1:8000/products/?category=corporate" class="wd-btn wd-btn-outline px-5 py-3">Go to Corporate/Bulk</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
