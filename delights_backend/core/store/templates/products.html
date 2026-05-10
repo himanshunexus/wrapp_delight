@@ -15,8 +15,9 @@
   .delay-100 { animation-delay: .10s; }
   .delay-200 { animation-delay: .20s; }
   .delay-300 { animation-delay: .30s; }
-  .reveal { opacity: 0; transform: translateY(20px); transition: opacity .65s ease, transform .65s ease; }
-  .reveal.visible { opacity: 1; transform: none; }
+  .reveal { opacity: 1; transform: none; transition: opacity .65s ease, transform .65s ease; }
+  .js-enabled .reveal { opacity: 0; transform: translateY(20px); }
+  .js-enabled .reveal.visible { opacity: 1; transform: none; }
 
   /* ─── Page hero banner ─── */
   .catalog-hero {
@@ -481,7 +482,7 @@
   ════════════════════════════════════════════ -->
   {% if categories and not active_category %}
   <div class="bg-white border-b border-[#f0e4e4] py-8 px-3 md:px-6">
-    <div class="w-full mx-auto px-3 md:px-6 reveal\">
+    <div class="w-full mx-auto px-3 md:px-6 reveal">
       <div class="flex justify-center flex-wrap gap-6">
         {% for cat in categories %}
           <a href="{% url 'products' %}?category={{ cat.slug }}"
@@ -651,7 +652,7 @@
        CORPORATE CTA BANNER  (mirrors home.html)
   ════════════════════════════════════════════ -->
   <section class="py-14 px-3 md:px-6">
-    <div class="w-full mx-auto px-3 md:px-6 reveal\">
+    <div class="w-full mx-auto px-3 md:px-6 reveal">
       <div style="background:linear-gradient(135deg,#fff8f7 0%,#fce8e8 100%);border:1px solid #e4beba;border-radius:20px;overflow:hidden;position:relative;padding:48px 48px;display:flex;flex-direction:column;gap:24px;"
            class="md:flex-row md:items-center md:justify-between">
         <!-- BG accent -->
@@ -694,8 +695,15 @@
 {% block extra_js %}
 <script>
   (() => {
+    document.documentElement.classList.add('js-enabled');
+
     /* ── Scroll reveal ── */
     const reveals = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      reveals.forEach(el => el.classList.add('visible'));
+      return;
+    }
+
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
