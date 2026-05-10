@@ -1404,8 +1404,10 @@
 
           <div id="categoryCarouselTrack" class="flex gap-6 overflow-x-auto no-scrollbar px-4 py-2">
             {% for product in products_by_category.Hampers %}
-            <div class="category-product-card" data-category="Hampers" data-product-id="{{ product.id }}">
-              <div class="category-product-img group">
+            <div class="category-product-card" data-category="Hampers" data-product-id="{{ product.id }}"
+              data-product-url="{% url 'product_detail' product.id %}" role="link" tabindex="0"
+              aria-label="View {{ product.name }}">
+              <a href="{% url 'product_detail' product.id %}" class="category-product-img group block">
                 {% if product.cover_image_url %}
                 <img src="{{ product.cover_image_url }}" alt="{{ product.name }}" loading="lazy"
                   class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0">
@@ -1422,9 +1424,9 @@
                   data-hamper-id="{{ product.id }}">
                   <span class="material-symbols-outlined" style="font-size:16px;">favorite</span>
                 </button>
-              </div>
+              </a>
               <div class="category-product-info">
-                <p class="category-product-name">{{ product.name }}</p>
+                <a href="{% url 'product_detail' product.id %}" class="category-product-name">{{ product.name }}</a>
                 <p class="category-product-category">{{ product.category.name }}</p>
                 <p class="category-product-price">₹{% if product.base_price %}{{ product.base_price|floatformat:0 }}{% else %}{{ product.price_label }}{% endif %}</p>
               </div>
@@ -1463,6 +1465,7 @@
             "id": {{ product.id }},
             "name": "{{ product.name|escapejs }}",
             "category": "{{ product.category.name|escapejs }}",
+            "detailUrl": "{% url 'product_detail' product.id %}",
             "price": {% if product.base_price %}{{ product.base_price }}{% else %}"{{ product.price_label|escapejs }}"{% endif %},
             "image": "{% if product.cover_image_url %}{{ product.cover_image_url|escapejs }}{% else %}{% endif %}",
             "hoverImage": "{% if product.gallery_image_url and product.gallery_image_url != product.cover_image_url %}{{ product.gallery_image_url|escapejs }}{% else %}{% endif %}"
@@ -1501,15 +1504,19 @@
           card.className = 'category-product-card';
           card.setAttribute('data-product-id', product.id);
           card.setAttribute('data-category', categoryName);
+          card.setAttribute('data-product-url', product.detailUrl);
+          card.setAttribute('role', 'link');
+          card.setAttribute('tabindex', '0');
+          card.setAttribute('aria-label', `View ${product.name}`);
           card.innerHTML = `
-        <div class="category-product-img group">
+        <a href="${product.detailUrl}" class="category-product-img group block">
           ${imgHtml}
           <button class="category-product-wishlist" aria-label="Add to wishlist" data-hamper-id="${product.id}">
             <span class="material-symbols-outlined" style="font-size:16px;">favorite</span>
           </button>
-        </div>
+        </a>
         <div class="category-product-info">
-          <p class="category-product-name">${product.name}</p>
+          <a href="${product.detailUrl}" class="category-product-name">${product.name}</a>
           <p class="category-product-category">${product.category}</p>
           <p class="category-product-price">₹${typeof product.price === 'string' ? product.price : Math.floor(product.price)}</p>
         </div>
@@ -1599,7 +1606,8 @@
         <div id="carouselTrack" class="flex gap-5 overflow-x-auto no-scrollbar pb-4">
 
           {% for product in best_sellers %}
-          <div class="product-card w-[260px] md:w-[310px] shrink-0">
+          <div class="product-card w-[260px] md:w-[310px] shrink-0" data-product-url="{% url 'product_detail' product.id %}"
+            role="link" tabindex="0" aria-label="View {{ product.name }}">
             <a href="{% url 'product_detail' product.id %}" class="product-card-img block aspect-square relative">
               {% if product.cover_image %}
               <img src="{{ product.cover_image.url }}" alt="{{ product.name }}" loading="lazy">
@@ -2322,11 +2330,34 @@
         });
       }
 
+      function bindHomepageProductCards() {
+        document.querySelectorAll('.category-product-card[data-product-url]:not([data-card-bound]), #carouselTrack .product-card[data-product-url]:not([data-card-bound])').forEach(card => {
+          const productUrl = card.getAttribute('data-product-url');
+          if (!productUrl) return;
+
+          card.setAttribute('data-card-bound', 'true');
+
+          card.addEventListener('click', (event) => {
+            if (event.target.closest('a, button')) return;
+            window.location.href = productUrl;
+          });
+
+          card.addEventListener('keydown', (event) => {
+            if (event.key !== 'Enter' && event.key !== ' ') return;
+            if (event.target.closest('a, button')) return;
+            event.preventDefault();
+            window.location.href = productUrl;
+          });
+        });
+      }
+
       setFavoritesCount(Number(document.body.dataset.favoritesCount || FAVORITE_STATE.size || 0));
       bindFavoriteButtons();
+      bindHomepageProductCards();
 
       const favoriteObserver = new MutationObserver(() => {
         bindFavoriteButtons();
+        bindHomepageProductCards();
       });
       favoriteObserver.observe(document.body, { childList: true, subtree: true });
 
