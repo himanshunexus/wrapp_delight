@@ -38,7 +38,10 @@ DEBUG = os.getenv("DEBUG", "False").lower() in {
 
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+    for host in os.getenv(
+        "ALLOWED_HOSTS",
+        "wrappdelights.com,www.wrappdelights.com,wrappdelights.onrender.com,localhost,127.0.0.1",
+    ).split(",")
     if host.strip()
 ]
 
