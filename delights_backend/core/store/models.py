@@ -127,7 +127,7 @@ class Hamper(models.Model):
     HAMPER_STEP_CHOICES = [
         ("base", "Box"),
         ("office", "Office Essentials"),
-        ("gourmet", "Gourmet Treats"),
+        ("gourmet", "Gourmet Treats / Home decor"),
         ("personalize", "Personalize"),
     ]
     name = models.CharField(max_length=180)

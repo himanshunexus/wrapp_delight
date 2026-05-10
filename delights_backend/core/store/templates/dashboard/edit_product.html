@@ -58,7 +58,7 @@
                 <option value="">No step</option>
                 <option value="base" {% if form_data %}{% if form_data.hamper_step == 'base' %}selected{% endif %}{% else %}{% if hamper.hamper_step == 'base' %}selected{% endif %}{% endif %}>Box</option>
                 <option value="office" {% if form_data %}{% if form_data.hamper_step == 'office' %}selected{% endif %}{% else %}{% if hamper.hamper_step == 'office' %}selected{% endif %}{% endif %}>Office Essentials</option>
-                <option value="gourmet" {% if form_data %}{% if form_data.hamper_step == 'gourmet' %}selected{% endif %}{% else %}{% if hamper.hamper_step == 'gourmet' %}selected{% endif %}{% endif %}>Gourmet Treats</option>
+                <option value="gourmet" {% if form_data %}{% if form_data.hamper_step == 'gourmet' %}selected{% endif %}{% else %}{% if hamper.hamper_step == 'gourmet' %}selected{% endif %}{% endif %}>Gourmet Treats / Home decor</option>
                 <option value="personalize" {% if form_data %}{% if form_data.hamper_step == 'personalize' %}selected{% endif %}{% else %}{% if hamper.hamper_step == 'personalize' %}selected{% endif %}{% endif %}>Personalize</option>
               </select>
               <span class="form-hint">Assign this product to a builder step (optional)</span>

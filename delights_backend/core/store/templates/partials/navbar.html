@@ -247,6 +247,8 @@
 
   .wd-gift-toggle {
     display: none;
+    position: relative;
+    z-index: 35;
     align-items: center;
     gap: 4px;
     border: 1px solid #dfc5c2;
@@ -382,6 +384,8 @@
   /* Mobile menu toggle */
   .wd-mobile-toggle {
     display: none;
+    position: relative;
+    z-index: 1000;
     align-items: center;
     justify-content: center;
     width: 44px;
@@ -397,6 +401,13 @@
   @media (max-width: 767px) {
     .wd-mobile-toggle {
       display: flex;
+    }
+
+    .wd-ribbon {
+      display: block;
+      left: 10px;
+      top: -10px;
+      width: 52px;
     }
   }
 
@@ -443,29 +454,59 @@
     color: #af101a;
   }
 
+  .wd-left-controls {
+    position: relative;
+    z-index: 45;
+  }
+
   @keyframes ribbon-swing {
     0% {
-      transform: rotate(-2deg);
+      transform: translate(var(--wd-ribbon-shift-x, 0), var(--wd-ribbon-shift-y, 0)) rotate(-2deg) scale(var(--wd-ribbon-scale, 1));
     }
 
     100% {
-      transform: rotate(3deg);
+      transform: translate(var(--wd-ribbon-shift-x, 0), var(--wd-ribbon-shift-y, 0)) rotate(3deg) scale(var(--wd-ribbon-scale, 1));
     }
   }
 
   .wd-ribbon {
-    display: none; /* Hidden on mobile */
+    display: none;
     position: absolute;
     top: -2px;
     left: 28px;
     width: 50px;
     pointer-events: none;
-    z-index: 60;
+    z-index: -1000;
+    opacity: 1;
+    --wd-ribbon-shift-x: 0px;
+    --wd-ribbon-shift-y: 0px;
+    --wd-ribbon-scale: 1;
+    transition: opacity 0.2s ease;
     transform-origin: top center;
     animation: ribbon-swing 4.5s ease-in-out infinite alternate;
     filter: drop-shadow(0 6px 10px rgba(175, 16, 26, 0.22));
   }
-  @media (min-width: 768px) {
+
+  #siteHeader.ribbon-folded .wd-ribbon {
+    --wd-ribbon-shift-x: -34px;
+    --wd-ribbon-shift-y: -14px;
+    --wd-ribbon-scale: 0.42;
+    opacity: 0.16;
+  }
+
+  #siteHeader nav {
+    position: relative;
+    z-index: 40;
+  }
+
+  @media (min-width: 1024px) and (max-width: 1199px) {
+    .wd-ribbon {
+      left: 40px;
+      width: 72px;
+    }
+  }
+
+  @media (min-width: 1024px) {
     .wd-ribbon { 
       display: block;
       left: 60px; 
@@ -488,7 +529,7 @@
     <div class="grid grid-cols-[1fr_auto_1fr] items-center w-full h-[60px] gap-4 md:gap-6">
 
       <!-- Left: Mobile Toggle + Gift Type Toggle -->
-      <div class="flex items-center justify-start gap-1.5 md:gap-2 justify-self-start pr-0 md:pr-1">
+      <div class="wd-left-controls flex items-center justify-start gap-1.5 md:gap-2 justify-self-start pr-0 md:pr-1">
         <button type="button" id="mobileMenuToggle" class="wd-mobile-toggle md:hidden" aria-expanded="false"
           aria-controls="mobileMenu" aria-label="Toggle navigation">
           <span class="material-symbols-outlined" style="font-size:22px;" id="mobileMenuIcon">menu</span>
@@ -639,13 +680,6 @@
           </a>
         </li>
 
-        <!-- About -->
-        <li>
-          <a href="{% url 'about' %}" class="wd-nav-link {% block nav_about %}{% endblock %}">
-            About Us
-          </a>
-        </li>
-
         <!-- Build Hamper CTA -->
         <li>
           <a href="{% url 'custom_hamper' %}" class="wd-nav-cta ml-2 {% block nav_hamper %}{% endblock %}">
@@ -688,20 +722,15 @@
           style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">inventory_2</span>
         All Gifts
       </a>
-      <a href="{% url 'about' %}" class="wd-mobile-link">
-        <span class="material-symbols-outlined"
-          style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">info</span>
-        About Us
-      </a>
       <a href="{% url 'custom_hamper' %}" class="wd-mobile-link">
         <span class="material-symbols-outlined"
           style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">redeem</span>
         Build Custom Hamper
       </a>
-      <a href="tel:{{ phone_number_raw|default:'+919309810348' }}" class="wd-mobile-link" style="border-bottom:none;">
+      <a href="tel:{{ phone_number_raw|default:'+917397827703' }}" class="wd-mobile-link" style="border-bottom:none;">
         <span class="material-symbols-outlined"
           style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">call</span>
-        {{ phone_number|default:'+91 93098 10348' }}
+        {{ phone_number|default:'+91 7397 827 703' }}
       </a>
       <div class="mt-5">
         <a href="{% url 'custom_hamper' %}" class="wd-nav-cta w-full justify-center"
@@ -718,6 +747,32 @@
 <script>
   (function () {
     var header = document.getElementById('siteHeader');
+    var ZOOM_FOLD_THRESHOLD = 1.25;
+
+    function getEffectiveZoom() {
+      if (window.visualViewport && typeof window.visualViewport.scale === 'number' && window.visualViewport.scale > 0) {
+        return window.visualViewport.scale;
+      }
+      if (window.outerWidth && window.innerWidth) {
+        var ratio = window.outerWidth / window.innerWidth;
+        if (ratio > 0) return ratio;
+      }
+      if (window.devicePixelRatio) {
+        return window.devicePixelRatio;
+      }
+      return 1;
+    }
+
+    function updateRibbonFoldState() {
+      if (!header) return;
+      var zoom = getEffectiveZoom();
+      if (zoom >= ZOOM_FOLD_THRESHOLD) {
+        header.classList.add('ribbon-folded');
+      } else {
+        header.classList.remove('ribbon-folded');
+      }
+    }
+
     function firstVisibleDescendant(root) {
       if (!root) return null;
       var children = root.children;
@@ -734,6 +789,7 @@
 
     function updateHeaderHeight() {
       if (!header) return;
+      updateRibbonFoldState();
       var h = header.offsetHeight || 110;
       var next = header.nextElementSibling || document.body.firstElementChild;
       var first = null;
@@ -766,5 +822,8 @@
     document.addEventListener('DOMContentLoaded', updateHeaderHeight);
     window.addEventListener('load', updateHeaderHeight);
     window.addEventListener('resize', updateHeaderHeight);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', updateHeaderHeight);
+    }
   })();
 </script>

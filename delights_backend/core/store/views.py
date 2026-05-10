@@ -107,7 +107,7 @@ CATEGORY_DISPLAY_NAMES = {
     "wedding-return-gifts": "Wedding Return Gifts",
 }
 
-_success_whatsapp_digits = ''.join(ch for ch in getattr(settings, "WHATSAPP_NUMBER", "9309810348") if ch.isdigit())
+_success_whatsapp_digits = ''.join(ch for ch in getattr(settings, "WHATSAPP_NUMBER", "7397827703") if ch.isdigit())
 if len(_success_whatsapp_digits) == 10:
     SUCCESS_WHATSAPP_RAW = f"91{_success_whatsapp_digits}"
 else:
@@ -129,7 +129,7 @@ STEP_CONFIG = {
     },
     3: {
         "slug": "gourmet",
-        "title": "Gourmet Treats",
+        "title": "Gourmet Treats / Home decor",
         "subtitle": "Add premium food and treat selections to elevate the kit.",
         "category_hints": ["gourmet", "treat", "snack", "food"],
     },
@@ -452,8 +452,8 @@ def corporate(request):
             "selected_type": selected_type,
             "products": Hamper.objects.filter(is_active=True).order_by("-created_at")[:8],
             "whatsapp_number": SUCCESS_WHATSAPP_RAW,
-            "phone_number": getattr(settings, "PHONE_NUMBER", "+91 93098 10348"),
-            "phone_number_raw": getattr(settings, "PHONE_NUMBER_RAW", "+919309810348"),
+            "phone_number": getattr(settings, "PHONE_NUMBER", "+91 7397 827 703"),
+            "phone_number_raw": getattr(settings, "PHONE_NUMBER_RAW", "+917397827703"),
         },
     )
 
