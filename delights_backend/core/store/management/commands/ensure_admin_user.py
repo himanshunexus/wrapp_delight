@@ -1,20 +1,23 @@
+import os
+
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
 
-# Hardcoded bootstrap credentials for the admin account.
-# Username: admin
-# Password: D^L!G#t$0@dm/7404
-# Email: admin@example.com
-ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD = "D^L!G#t$0@dm/7404"
-ADMIN_EMAIL = "admin@example.com"
+ADMIN_USERNAME = os.getenv("ADMIN_BOOTSTRAP_USERNAME", "admin")
+ADMIN_PASSWORD = os.getenv("ADMIN_BOOTSTRAP_PASSWORD", "")
+ADMIN_EMAIL = os.getenv("ADMIN_BOOTSTRAP_EMAIL", "admin@example.com")
 
 
 class Command(BaseCommand):
-    help = "Bootstrap admin superuser with hardcoded credentials."
+    help = "Bootstrap admin superuser from environment credentials."
 
     def handle(self, *args, **options):
+        if not ADMIN_PASSWORD:
+            raise RuntimeError(
+                "ADMIN_BOOTSTRAP_PASSWORD must be set before bootstrapping the admin user."
+            )
+
         user_model = get_user_model()
         user, created = user_model.objects.get_or_create(
             username=ADMIN_USERNAME,

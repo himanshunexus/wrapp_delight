@@ -44,7 +44,7 @@ Expected: Should show a value like "postgresql://user:pass@host:port/dbname"
 
 **Check 2: After deployment, verify database is being used**
 ```
-Django Admin → Login with Admin / D^L!G#t$0@dm/7404
+Django Admin -> Login with the configured `ADMIN_BOOTSTRAP_USERNAME` and `ADMIN_BOOTSTRAP_PASSWORD`
 → Add a test product
 → Trigger a redeployment (git push)
 → Check if product is still there

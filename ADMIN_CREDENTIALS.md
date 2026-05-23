@@ -2,18 +2,18 @@
 
 ## Current Admin Account
 
-**Hardcoded credentials for the deployed admin account:**
+**Bootstrap credentials for the deployed admin account:**
 
-- **Username**: `admin` (lowercase)
-- **Password**: `D^L!G#t$0@dm/7404` (includes literal `$` and `0`)
-- **Email**: `admin@example.com`
+- **Username**: set with `ADMIN_BOOTSTRAP_USERNAME` (defaults to `admin`)
+- **Password**: set with `ADMIN_BOOTSTRAP_PASSWORD`
+- **Email**: set with `ADMIN_BOOTSTRAP_EMAIL` (defaults to `admin@example.com`)
 
 ### What This Means
 
-These credentials are hardcoded in:
+These credentials are read by:
 - `delights_backend/core/store/management/commands/ensure_admin_user.py`
 
-And they are enforced at every application startup via the `ensure_admin_user` management command.
+They are enforced at every application startup via the `ensure_admin_user` management command.
 
 ## Bootstrap Process
 
@@ -23,10 +23,10 @@ The startup sequence in `render.yaml`:
 
 1. Create media directory
 2. Run database migrations
-3. **Run `ensure_admin_user` command** — enforces the fixed admin account
+3. **Run `ensure_admin_user` command** — enforces the configured admin account
 4. Start Gunicorn
 
-**Result**: Admin account is created/updated with the hardcoded credentials above.
+**Result**: Admin account is created/updated with the credentials from environment variables.
 
 ### Locally (Development)
 
@@ -51,8 +51,8 @@ python manage.py ensure_admin_user --verbosity 2
 
 - **URL**: `http://localhost:8000/login/?next=/dashboard/` (local)
 - **URL**: `https://wrappdelights.onrender.com/login/?next=/dashboard/` (production)
-- **Username**: `admin` or `Admin` (case-insensitive)
-- **Password**: `D^L!G#t$0@dm/7404`
+- **Username**: configured with `ADMIN_BOOTSTRAP_USERNAME`
+- **Password**: configured with `ADMIN_BOOTSTRAP_PASSWORD`
 
 The login form accepts either case for the username because `CaseInsensitiveAuthenticationForm` is used.
 
@@ -62,19 +62,18 @@ The login form accepts either case for the username because `CaseInsensitiveAuth
 - **URL**: `https://wrappdelights.onrender.com/control-room-admin/` (production, default)
 - **Path can be customized** via env var: `ADMIN_PANEL_PATH=your-secret-path/`
 
-Same credentials as above.
+Same configured credentials as above.
 
-## No Environment Variables Required
+## Environment Variables Required
 
-The admin account **does not** depend on `ADMIN_BOOTSTRAP_*` environment variables.
+The admin account depends on `ADMIN_BOOTSTRAP_*` environment variables.
 
-It uses hardcoded defaults only. Environment variables are not set in `render.yaml`, and the code does not listen for them.
+`ADMIN_BOOTSTRAP_PASSWORD` must be set before running `ensure_admin_user`.
 
 If you need to change credentials, you must:
 
-1. Update constants in `delights_backend/core/store/management/commands/ensure_admin_user.py`
-2. Commit and push
-3. Redeploy (Render will run the updated command at startup)
+1. Update the `ADMIN_BOOTSTRAP_*` environment variables
+2. Redeploy (Render will run the command at startup)
 
 Or manually in the Django shell:
 
@@ -89,11 +88,10 @@ python manage.py shell
 
 ## Summary
 
-- **Single source of truth**: `ensure_admin_user.py`
-- **Enforced at startup**: Every boot, the command ensures the hardcoded admin exists
-- **No env var coupling**: You don't need environment variables to log in
+- **Single source of truth**: Environment variables read by `ensure_admin_user.py`
+- **Enforced at startup**: Every boot, the command ensures the configured admin exists
+- **Environment-driven**: No password is committed to source control
 - **Case-insensitive login**: Username matching is flexible on the login form
-- **Password is literal**: The `$` character is part of the password, not a shell variable
 
 If login fails, the most common reasons:
 

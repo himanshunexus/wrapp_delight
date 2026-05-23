@@ -32,6 +32,12 @@ services:
         sync: false
       - key: MEDIA_ROOT
         value: /var/data/media
+      - key: ADMIN_BOOTSTRAP_USERNAME
+        value: admin
+      - key: ADMIN_BOOTSTRAP_PASSWORD
+        sync: false
+      - key: ADMIN_BOOTSTRAP_EMAIL
+        value: admin@example.com
 
 databases:
   - name: wrapp-delights-db
